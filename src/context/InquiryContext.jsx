@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { CheckCircle, Bell, X } from 'lucide-react';
 
-const API_BASE = import.meta.env?.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE = import.meta.env?.VITE_API_URL || 
+  (import.meta.env?.DEV ? 'http://localhost:5000/api' : 'https://theglobalenterprisesserver.onrender.com/api');
 const STORAGE_KEYS = {
   INQUIRIES: 'global_inquiries_cache',
   TOKEN: 'global_admin_token',
