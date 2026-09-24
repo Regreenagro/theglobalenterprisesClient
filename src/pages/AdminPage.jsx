@@ -479,22 +479,6 @@ export default function AdminPage() {
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedLeadIds([]);
-                setActiveTab(activeTab === 'BIN' ? 'ALL' : 'BIN');
-              }}
-              className={`p-2 sm:p-2.5 rounded-xl border transition-all flex items-center gap-1.5 sm:gap-2 text-xs font-bold cursor-pointer ${
-                activeTab === 'BIN'
-                  ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-600/30 ring-2 ring-red-400/40'
-                  : 'bg-red-950/40 border-red-500/30 text-red-300 hover:bg-red-950/70'
-              }`}
-              title="View Recycle Bin"
-            >
-              <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 shrink-0" />
-              <span>Bin ({trashedInquiries.length})</span>
-            </button>
 
             <button
               onClick={() => setIsSecurityModalOpen(true)}
