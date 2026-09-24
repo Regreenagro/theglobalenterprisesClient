@@ -77,13 +77,31 @@ const pageSEOMap = {
     pageName: 'Contact Us'
   },
   '/admin': {
-    title: 'Admin Sign In | Global Enterprises CRM',
+    title: 'Admin Dashboard | Global Enterprises CRM',
     description: 'Administrative CRM portal for Global Enterprises team members.',
-    keywords: 'admin login, internal crm',
+    keywords: 'admin dashboard, internal crm',
     image: '/images/headquarters.jpg',
     type: 'website',
     isIndexable: false,
-    pageName: 'Admin'
+    pageName: 'Admin Dashboard'
+  },
+  '/admin/login': {
+    title: 'Admin Portal Login | Global Enterprises CRM',
+    description: 'Secure administrative authentication portal for Global Enterprises team members.',
+    keywords: 'admin login, internal crm portal',
+    image: '/images/headquarters.jpg',
+    type: 'website',
+    isIndexable: false,
+    pageName: 'Admin Login'
+  },
+  '/admin-login': {
+    title: 'Admin Portal Login | Global Enterprises CRM',
+    description: 'Secure administrative authentication portal for Global Enterprises team members.',
+    keywords: 'admin login, internal crm portal',
+    image: '/images/headquarters.jpg',
+    type: 'website',
+    isIndexable: false,
+    pageName: 'Admin Login'
   }
 };
 

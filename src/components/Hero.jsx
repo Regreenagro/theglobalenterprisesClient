@@ -236,7 +236,7 @@ export default function Hero({ onOpenSchedule }) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            <div className="lg:col-span-7 relative rounded-2xl overflow-hidden group aspect-[16/9] border border-white/15 bg-black/40">
+            <div className="lg:col-span-7 relative rounded-2xl overflow-hidden group aspect-[16/10] sm:aspect-[16/9.5] min-h-[250px] sm:min-h-[290px] border border-white/15 bg-black/40 shadow-xl">
               <img
                 src={current.image}
                 alt={`${current.title} - Global Enterprises ${current.category} Solutions`}

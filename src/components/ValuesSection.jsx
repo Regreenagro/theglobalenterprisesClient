@@ -29,7 +29,7 @@ export default function ValuesSection() {
           <div className="md:col-span-7 glass-card p-6 sm:p-8 rounded-3xl border border-amber-400/30 bg-gradient-to-br from-[#240f42] to-[#16082b] flex flex-col justify-between hover:border-amber-400/60 transition-all duration-300 group relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
             <div>
-              <div className="relative aspect-[16/8] sm:aspect-[16/7] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black">
+              <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black shadow-lg">
                 <img
                   src="/images/cctv.jpg"
                   alt="Quality Engineering"
@@ -64,7 +64,7 @@ export default function ValuesSection() {
 
           <div className="md:col-span-5 glass-card p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 group">
             <div>
-              <div className="relative aspect-[16/8] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black">
+              <div className="relative aspect-[16/9.5] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black shadow-lg">
                 <img
                   src="/images/speedgates.jpg"
                   alt="Timeliness Milestone Delivery"
@@ -99,7 +99,7 @@ export default function ValuesSection() {
 
           <div className="md:col-span-4 glass-card p-6 sm:p-7 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 group">
             <div>
-              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black">
+              <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black shadow-md">
                 <img
                   src="/images/av_room.jpg"
                   alt="Transparency"
@@ -125,7 +125,7 @@ export default function ValuesSection() {
 
           <div className="md:col-span-4 glass-card p-6 sm:p-7 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 group">
             <div>
-              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black">
+              <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black shadow-md">
                 <img
                   src="/images/workspace.jpg"
                   alt="Value"
@@ -151,7 +151,7 @@ export default function ValuesSection() {
 
           <div className="md:col-span-4 glass-card p-6 sm:p-7 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-amber-400/50 transition-all duration-300 group">
             <div>
-              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black">
+              <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-4 border border-white/15 bg-black shadow-md">
                 <img
                   src="/images/headquarters.jpg"
                   alt="Dedication"

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { useInquiry } from '../context/InquiryContext';
 import {
   Menu,
   X,
@@ -15,14 +14,12 @@ import {
   CheckCircle2,
   ChevronRight,
   Zap,
-  ShieldCheck,
   Calendar,
   Server,
   Boxes
 } from 'lucide-react';
 
 export default function Navbar({ onOpenSchedule }) {
-  const { unreadCount, isLoggedIn, openAdminLogin } = useInquiry();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
@@ -308,7 +305,7 @@ export default function Navbar({ onOpenSchedule }) {
 
                     <div className="col-span-12 lg:col-span-5 flex flex-col justify-between pl-0 lg:pl-4">
                       <div>
-                        <div className="relative rounded-2xl overflow-hidden aspect-[16/9] border border-white/20 shadow-2xl mb-3 group/img bg-black">
+                        <div className="relative rounded-2xl overflow-hidden aspect-[16/9.5] border border-white/20 shadow-2xl mb-3 group/img bg-black">
                           <img
                             src={currentPreview.image}
                             alt={currentPreview.title}
@@ -451,25 +448,6 @@ export default function Navbar({ onOpenSchedule }) {
               <span className="hidden 2xl:inline text-xs font-bold whitespace-nowrap">+91 98999 33768</span>
             </a>
 
-            <Link
-              to="/admin"
-              onClick={(e) => {
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  openAdminLogin();
-                }
-              }}
-              className="relative flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-[#261047] border border-amber-400/50 text-amber-300 hover:text-white hover:border-amber-400 text-xs font-bold transition-all shadow-md shrink-0 cursor-pointer"
-              title={isLoggedIn ? 'Admin CRM Dashboard' : 'Admin Login'}
-            >
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-              <span className="hidden lg:inline whitespace-nowrap">{isLoggedIn ? 'Admin CRM' : 'Admin Login'}</span>
-              {unreadCount > 0 && (
-                <span className="w-4 h-4 rounded-full bg-red-500 text-white font-black text-[9px] flex items-center justify-center animate-pulse shadow-md">
-                  {unreadCount}
-                </span>
-              )}
-            </Link>
 
             <button
               onClick={() => onOpenSchedule({ type: 'meeting', title: 'Schedule Strategy Consultation' })}
@@ -630,28 +608,6 @@ export default function Navbar({ onOpenSchedule }) {
               <span className={`w-1.5 h-1.5 rounded-full ${location.pathname === '/contact' ? 'bg-amber-400 shadow-[0_0_8px_#f59e0b]' : 'bg-white/20'}`}></span>
             </Link>
 
-            <Link
-              to="/admin"
-              onClick={(e) => {
-                setMobileMenuOpen(false);
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  openAdminLogin();
-                }
-              }}
-              style={{ animationDelay: '350ms' }}
-              className="animate-nav-item py-3 px-4 rounded-xl border border-amber-400/40 bg-[#261047] font-bold text-amber-300 flex items-center justify-between cursor-pointer shadow-md hover:border-amber-400 transition-all duration-300"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
-                <span>{isLoggedIn ? 'Admin CRM Portal' : 'Admin Login'}</span>
-              </div>
-              {unreadCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-black animate-pulse">
-                  {unreadCount} New Leads
-                </span>
-              )}
-            </Link>
 
             <div style={{ animationDelay: '390ms' }} className="animate-nav-item pt-3 flex flex-col gap-2">
               <button

@@ -217,7 +217,7 @@ export default function CapabilitiesMatrix({ onOpenSchedule }) {
               key={prod.id}
               className="glass-card rounded-3xl border border-white/10 hover:border-amber-400/50 transition-all duration-300 flex flex-col overflow-hidden group bg-[#16082b]"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-black">
+              <div className="relative aspect-[16/11] overflow-hidden bg-black">
                 <img
                   src={prod.image}
                   alt={`${prod.title} - ${prod.categoryLabel} Infrastructure System`}
@@ -304,7 +304,7 @@ export default function CapabilitiesMatrix({ onOpenSchedule }) {
 
               {/* Scrollable Content Body */}
               <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 sm:space-y-5">
-                <div className="aspect-[16/8] rounded-2xl overflow-hidden border border-white/10 bg-black shrink-0">
+                <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-white/10 bg-black shrink-0 shadow-lg">
                   <img
                     src={selectedProductModal.image}
                     alt={`${selectedProductModal.title} - Technical Specifications & Deployment`}

@@ -59,12 +59,12 @@ export default function ValuesPage() {
 
   return (
     <div className="pt-20">
-      <div className="relative min-h-[280px] sm:min-h-[320px] flex items-center justify-center overflow-hidden border-b border-white/10">
+      <div className="relative min-h-[320px] sm:min-h-[360px] flex items-center justify-center overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 z-0">
           <img
             src="/images/workspace.jpg"
             alt="Modern Ergonomic Corporate Workspace"
-            className="w-full h-full object-cover object-center opacity-30 scale-105"
+            className="w-full h-full object-cover object-center opacity-35 scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0d041a]/95 via-[#120722]/85 to-[#120722]"></div>
           <div className="absolute inset-0 bg-tech-grid opacity-60"></div>

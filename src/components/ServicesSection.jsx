@@ -306,7 +306,7 @@ export default function ServicesSection({ onOpenSchedule }) {
             </div>
 
             <div className="lg:col-span-4 flex flex-col gap-6">
-              <div className="relative rounded-2xl overflow-hidden aspect-[16/10] border border-white/15 shadow-xl bg-black">
+              <div className="relative rounded-2xl overflow-hidden aspect-[16/11.5] min-h-[220px] sm:min-h-[260px] border border-white/15 shadow-xl bg-black">
                 <img
                   src={current.image}
                   alt={current.title}

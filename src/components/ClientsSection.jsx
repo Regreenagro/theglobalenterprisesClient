@@ -105,14 +105,14 @@ export default function ClientsSection({ onOpenSchedule }) {
             renderItem={(client, idx) => (
               <div
                 key={idx}
-                className="w-[200px] min-w-[200px] sm:w-[230px] sm:min-w-[230px] h-[90px] sm:h-[100px] px-6 py-4 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#16082c]/80 backdrop-blur-md shrink-0 shadow-lg"
+                className="w-[210px] min-w-[210px] sm:w-[245px] sm:min-w-[245px] h-[98px] sm:h-[110px] px-6 py-4 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#16082c]/80 backdrop-blur-md shrink-0 shadow-lg"
                 title={`${client.name} - ${client.sector}`}
               >
                 <img
                   src={client.logo}
                   alt={`${client.name} Logo`}
                   draggable={false}
-                  className={`max-h-9 sm:max-h-11 max-w-[160px] sm:max-w-[180px] object-contain filter drop-shadow group-hover:scale-110 transition-transform duration-300 pointer-events-none rounded-md ${
+                  className={`max-h-11 sm:max-h-13 max-w-[175px] sm:max-w-[195px] object-contain filter drop-shadow group-hover:scale-110 transition-transform duration-300 pointer-events-none rounded-md ${
                     client.logo.includes('raknpa') ? 'bg-white p-0.5 rounded-full shadow-md' : ''
                   }`}
                   onError={(e) => {
@@ -133,7 +133,7 @@ export default function ClientsSection({ onOpenSchedule }) {
                 className="glass-card p-6 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-amber-400/60 transition-all duration-300 group hover:-translate-y-1.5 relative overflow-hidden bg-[#180933]"
               >
                 <div>
-                  <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black">
+                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-white/15 bg-black shadow-lg">
                     <img
                       src={client.image}
                       alt={client.name}
@@ -178,7 +178,7 @@ export default function ClientsSection({ onOpenSchedule }) {
 
           <div className="glass-card p-6 rounded-3xl border border-amber-400/40 bg-gradient-to-br from-[#2b1250] to-[#17082e] flex flex-col justify-between shadow-2xl relative overflow-hidden group">
             <div>
-              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-5 border border-amber-400/30 bg-black">
+              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-amber-400/30 bg-black shadow-lg">
                 <img
                   src="/images/workspace.jpg"
                   alt="Enterprise Onboarding"

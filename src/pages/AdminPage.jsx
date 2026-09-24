@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useInquiry } from '../context/InquiryContext';
 import { 
   ShieldCheck, 
@@ -35,12 +36,12 @@ import {
 } from 'lucide-react';
 
 export default function AdminPage() {
+  const navigate = useNavigate();
   const { 
     inquiries, 
     unreadCount, 
     adminUser, 
     isLoggedIn, 
-    openAdminLogin,
     logout, 
     updateInquiryStatus, 
     updateInquiryNotes, 
@@ -268,35 +269,7 @@ export default function AdminPage() {
   const closedCount = inquiries.filter(i => i.status === 'Closed').length;
 
   if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen pt-28 pb-20 flex items-center justify-center bg-[#0d041a] relative overflow-hidden px-4">
-        <div className="bg-glow-orb w-[500px] h-[500px] bg-purple-700/20 top-10 left-10"></div>
-        <div className="bg-glow-orb w-[500px] h-[500px] bg-amber-500/15 bottom-10 right-10"></div>
-
-        <div className="max-w-md w-full glass-card p-8 sm:p-10 rounded-3xl border border-amber-400/30 text-center relative z-10 shadow-2xl">
-          <div className="w-14 h-14 rounded-2xl bg-amber-400/15 border border-amber-400/30 text-amber-400 mx-auto flex items-center justify-center mb-5 shadow-lg">
-            <ShieldCheck className="w-7 h-7" />
-          </div>
-          <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase block mb-1">
-            Restricted CRM Dashboard
-          </span>
-          <h1 className="text-2xl font-bold font-heading text-white mb-3">
-            Admin Authentication Required
-          </h1>
-          <p className="text-xs text-gray-300 leading-relaxed mb-6">
-            Access to client inquiries, leads pipeline, and consultation schedules requires verified administrative sign-in.
-          </p>
-
-          <button
-            onClick={openAdminLogin}
-            className="w-full btn-gold py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all"
-          >
-            <span>Open Admin Sign In</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    );
+    return <Navigate to="/admin/login" replace />;
   }
 
   return (
@@ -503,7 +476,10 @@ export default function AdminPage() {
               </div>
 
               <button
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  navigate('/admin/login', { replace: true });
+                }}
                 className="ml-auto sm:ml-1 p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-red-950/70 border border-red-500/50 text-red-300 hover:bg-red-900 transition-colors flex items-center gap-1 text-xs font-bold cursor-pointer shrink-0"
                 title="Logout Admin Session"
               >

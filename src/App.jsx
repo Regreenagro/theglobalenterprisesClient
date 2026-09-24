@@ -19,6 +19,7 @@ const MissionPage = lazy(() => import('./pages/MissionPage'));
 const ClientsPage = lazy(() => import('./pages/ClientsPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
 
 // Scroll to top helper on page change & close modal drawers
 function ScrollToTop() {
@@ -65,6 +66,8 @@ function AppContent() {
               <Route path="/clients" element={<ClientsPage onOpenSchedule={openModal} />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin/login" element={<AdminLoginPage />} />
+              <Route path="/admin-login" element={<AdminLoginPage />} />
             </Routes>
           </Suspense>
         </main>

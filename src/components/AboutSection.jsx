@@ -110,8 +110,8 @@ export default function AboutSection({ onOpenSchedule }) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-14">
-          <div className="lg:col-span-5 relative flex flex-col justify-between">
-            <div className="relative rounded-3xl overflow-hidden border border-white/20 h-full min-h-[440px] bg-[#1a0b32] group shadow-2xl">
+          <div className="lg:col-span-6 relative flex flex-col justify-between">
+            <div className="relative rounded-3xl overflow-hidden border border-white/20 h-full min-h-[500px] sm:min-h-[540px] bg-[#1a0b32] group shadow-2xl">
               <img
                 src="/images/headquarters.jpg"
                 alt="Global Enterprises Corporate Headquarters in CR Park, New Delhi"
@@ -122,7 +122,7 @@ export default function AboutSection({ onOpenSchedule }) {
               <div className="absolute inset-0 bg-gradient-to-t from-[#120722] via-[#120722]/30 to-transparent"></div>
 
               <div className="absolute top-4 left-4 p-3 rounded-2xl bg-[#140828]/95 backdrop-blur-xl border border-amber-400/40 shadow-2xl flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-white/95 border border-amber-400/50 shadow-md flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
+                <div className="w-12 h-12 rounded-xl bg-white/95 border border-amber-400/50 shadow-md flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
                   <img
                     src="/logo.png"
                     alt="Global Enterprises Corporate Logo"
@@ -158,7 +158,7 @@ export default function AboutSection({ onOpenSchedule }) {
             </div>
           </div>
 
-          <div className="lg:col-span-7 flex flex-col justify-between gap-6">
+          <div className="lg:col-span-6 flex flex-col justify-between gap-6">
             <div className="glass-card p-8 sm:p-9 rounded-3xl border border-white/10 relative overflow-hidden bg-[#1a0a33]">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#271047] border border-amber-400/30 text-amber-300 text-xs font-bold mb-5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />

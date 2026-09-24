@@ -434,7 +434,7 @@ export default function HomePage({ onOpenSchedule }) {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-6 relative rounded-2xl overflow-hidden aspect-[16/10] border border-white/15 shadow-2xl group bg-black">
+              <div className="lg:col-span-6 relative rounded-2xl overflow-hidden aspect-[16/11] min-h-[250px] sm:min-h-[290px] border border-white/15 shadow-2xl group bg-black">
                 <img
                   src={currentSolution.image}
                   alt={`${currentSolution.title} - Global Enterprises Infrastructure Solutions`}
@@ -591,7 +591,7 @@ export default function HomePage({ onOpenSchedule }) {
             renderItem={(client, idx) => (
               <div
                 key={idx}
-                className="w-[180px] min-w-[180px] sm:w-[210px] sm:min-w-[210px] h-[80px] sm:h-[90px] px-5 py-3 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#180830]/80 backdrop-blur-md shrink-0 shadow-lg"
+                className="w-[200px] min-w-[200px] sm:w-[230px] sm:min-w-[230px] h-[92px] sm:h-[102px] px-5 py-3 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#180830]/80 backdrop-blur-md shrink-0 shadow-lg"
                 title={`${client.name} - ${client.tag}`}
               >
                 <img
@@ -600,7 +600,7 @@ export default function HomePage({ onOpenSchedule }) {
                   loading="lazy"
                   decoding="async"
                   draggable={false}
-                  className={`max-h-8 sm:max-h-10 max-w-[150px] sm:max-w-[170px] object-contain filter drop-shadow group-hover:scale-110 transition-transform duration-300 pointer-events-none rounded-md ${
+                  className={`max-h-10 sm:max-h-12 max-w-[165px] sm:max-w-[185px] object-contain filter drop-shadow group-hover:scale-110 transition-transform duration-300 pointer-events-none rounded-md ${
                     client.logo.includes('raknpa') ? 'bg-white p-0.5 rounded-full shadow-md' : ''
                   }`}
                   onError={(e) => {
@@ -649,7 +649,7 @@ export default function HomePage({ onOpenSchedule }) {
             renderItem={(brand, idx) => (
               <div
                 key={idx}
-                className="w-[180px] min-w-[180px] sm:w-[210px] sm:min-w-[210px] h-[80px] sm:h-[90px] px-5 py-3 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#16082c]/80 backdrop-blur-md shrink-0 shadow-lg"
+                className="w-[200px] min-w-[200px] sm:w-[230px] sm:min-w-[230px] h-[92px] sm:h-[102px] px-5 py-3 rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 flex items-center justify-center group bg-[#16082c]/80 backdrop-blur-md shrink-0 shadow-lg"
                 title={brand.name}
               >
                 <img
@@ -658,7 +658,7 @@ export default function HomePage({ onOpenSchedule }) {
                   loading="lazy"
                   decoding="async"
                   draggable={false}
-                  className={`max-h-9 sm:max-h-11 max-w-[150px] sm:max-w-[170px] object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-300 pointer-events-none ${
+                  className={`max-h-11 sm:max-h-13 max-w-[165px] sm:max-w-[185px] object-contain filter drop-shadow group-hover:scale-105 transition-transform duration-300 pointer-events-none ${
                     brand.logo.includes('ahuja') || brand.logo.includes('vivotek') ? 'bg-white px-2.5 py-1 rounded-xl shadow-md' : ''
                   }`}
                   onError={(e) => {
