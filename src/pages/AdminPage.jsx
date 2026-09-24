@@ -16,6 +16,8 @@ import {
   Send, 
   Clock, 
   AlertCircle, 
+  AlertTriangle,
+  RotateCcw,
   Trash2, 
   FileText, 
   ChevronRight,
@@ -39,6 +41,7 @@ export default function AdminPage() {
   const navigate = useNavigate();
   const { 
     inquiries, 
+    trashedInquiries = [],
     unreadCount, 
     adminUser, 
     isLoggedIn, 
@@ -48,13 +51,29 @@ export default function AdminPage() {
     markAsRead, 
     markAllAsRead,
     deleteInquiry,
+    restoreInquiry,
+    permanentDeleteInquiry,
+    clearBin,
     bulkDeleteInquiries,
+    bulkRestoreInquiries,
+    bulkPermanentDeleteInquiries,
+    showToast,
     soundEnabled,
     setSoundEnabled,
     playChime,
     requestOTP,
     changePassword
   } = useInquiry();
+
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    description: '',
+    confirmLabel: '',
+    confirmColor: 'red',
+    iconType: 'trash',
+    onConfirm: null
+  });
 
   const [activeTab, setActiveTab] = useState('ALL');
   const [typeFilter, setTypeFilter] = useState('ALL');
@@ -147,10 +166,141 @@ export default function AdminPage() {
 
   const handleBulkDelete = () => {
     if (selectedLeadIds.length === 0) return;
-    if (window.confirm(`Are you sure you want to delete ${selectedLeadIds.length} selected lead(s)?`)) {
-      bulkDeleteInquiries(selectedLeadIds);
-      setSelectedLeadIds([]);
+    if (activeTab === 'BIN') {
+      setConfirmModal({
+        isOpen: true,
+        title: `Permanently Erase ${selectedLeadIds.length} Lead(s)?`,
+        description: `This will permanently delete ${selectedLeadIds.length} selected lead(s) from the database. This action cannot be reversed.`,
+        confirmLabel: `Erase (${selectedLeadIds.length}) Permanently`,
+        confirmColor: 'red',
+        iconType: 'permanent',
+        onConfirm: () => {
+          bulkPermanentDeleteInquiries(selectedLeadIds);
+          setSelectedLeadIds([]);
+          if (showToast) {
+            showToast({
+              type: 'user',
+              title: 'Permanently Erased',
+              message: `${selectedLeadIds.length} lead(s) permanently erased.`
+            });
+          }
+        }
+      });
+    } else {
+      setConfirmModal({
+        isOpen: true,
+        title: `Move ${selectedLeadIds.length} Lead(s) to Recycle Bin?`,
+        description: `Are you sure you want to move ${selectedLeadIds.length} selected lead(s) to the Recycle Bin? You can recover them anytime.`,
+        confirmLabel: `Move (${selectedLeadIds.length}) to Bin`,
+        confirmColor: 'amber',
+        iconType: 'trash',
+        onConfirm: () => {
+          bulkDeleteInquiries(selectedLeadIds);
+          setSelectedLeadIds([]);
+          if (showToast) {
+            showToast({
+              type: 'user',
+              title: 'Moved to Recycle Bin',
+              message: `${selectedLeadIds.length} lead(s) moved to Recycle Bin.`
+            });
+          }
+        }
+      });
     }
+  };
+
+  const handleBulkRestore = () => {
+    if (selectedLeadIds.length === 0) return;
+    bulkRestoreInquiries(selectedLeadIds);
+    if (showToast) {
+      showToast({
+        type: 'user',
+        title: 'Leads Recovered',
+        message: `${selectedLeadIds.length} lead(s) restored to active pipeline.`
+      });
+    }
+    setSelectedLeadIds([]);
+  };
+
+  const promptDeleteLead = (inq) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Move Lead to Recycle Bin?',
+      description: `Are you sure you want to move lead "${inq.name}" (${inq.company || 'Enterprise Client'}) to the Recycle Bin? You can easily recover it anytime.`,
+      confirmLabel: 'Move to Bin',
+      confirmColor: 'amber',
+      iconType: 'trash',
+      onConfirm: () => {
+        deleteInquiry(inq.id);
+        if (selectedInquiry?.id === inq.id) setSelectedInquiry(null);
+        if (showToast) {
+          showToast({
+            type: 'user',
+            title: 'Moved to Recycle Bin',
+            message: `Lead "${inq.name}" was moved to Recycle Bin.`
+          });
+        }
+      }
+    });
+  };
+
+  const handleRestoreLead = (inq) => {
+    restoreInquiry(inq.id);
+    if (selectedInquiry?.id === inq.id) {
+      setSelectedInquiry(prev => ({ ...prev, isDeleted: false, deletedAt: null }));
+    }
+    if (showToast) {
+      showToast({
+        type: 'user',
+        title: 'Lead Recovered',
+        message: `Lead "${inq.name}" has been restored to active pipeline.`
+      });
+    }
+  };
+
+  const promptPermanentDeleteLead = (inq) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Permanently Erase Lead?',
+      description: `Lead "${inq.name}" will be permanently removed from the database. This action CANNOT be undone.`,
+      confirmLabel: 'Delete Permanently',
+      confirmColor: 'red',
+      iconType: 'permanent',
+      onConfirm: () => {
+        permanentDeleteInquiry(inq.id);
+        if (selectedInquiry?.id === inq.id) setSelectedInquiry(null);
+        if (showToast) {
+          showToast({
+            type: 'user',
+            title: 'Permanently Erased',
+            message: `Lead "${inq.name}" was permanently erased.`
+          });
+        }
+      }
+    });
+  };
+
+  const promptClearBin = () => {
+    if (trashedInquiries.length === 0) return;
+    setConfirmModal({
+      isOpen: true,
+      title: 'Empty Entire Recycle Bin?',
+      description: `Are you sure you want to permanently erase all ${trashedInquiries.length} leads in the Recycle Bin? This action is permanent and cannot be undone.`,
+      confirmLabel: `Empty Bin (${trashedInquiries.length})`,
+      confirmColor: 'red',
+      iconType: 'clearBin',
+      onConfirm: () => {
+        clearBin();
+        setSelectedLeadIds([]);
+        if (showToast) {
+          showToast({
+            type: 'user',
+            title: 'Recycle Bin Emptied',
+            message: 'All trashed leads were permanently removed.'
+          });
+        }
+      }
+    });
   };
 
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
@@ -239,13 +389,16 @@ export default function AdminPage() {
   const quotesCount = inquiries.filter(i => i.type === 'quote').length;
   const generalCount = inquiries.filter(i => i.type === 'general').length;
 
-  const filteredInquiries = inquiries.filter(inq => {
+  const sourceList = activeTab === 'BIN' ? trashedInquiries : inquiries;
+
+  const filteredInquiries = sourceList.filter(inq => {
     const inqType = inq.type || 'inquiry';
     const matchesType = 
       typeFilter === 'ALL' ? true :
       typeFilter === inqType;
 
     const matchesTab = 
+      activeTab === 'BIN' ? true :
       activeTab === 'ALL' ? true :
       activeTab === 'NEW' ? inq.status === 'New' :
       activeTab === 'IN_PROGRESS' ? inq.status === 'In Progress' :
@@ -290,16 +443,58 @@ export default function AdminPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            {selectedLeadIds.length > 0 && (
+            {selectedLeadIds.length > 0 && activeTab === 'BIN' && (
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  type="button"
+                  onClick={handleBulkRestore}
+                  className="p-2 sm:p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold transition-all flex items-center gap-1.5 sm:gap-2 text-xs shadow-lg cursor-pointer"
+                  title="Recover Selected Leads"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>Recover ({selectedLeadIds.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleBulkDelete}
+                  className="p-2 sm:p-2.5 rounded-xl bg-red-700 hover:bg-red-600 text-white font-extrabold transition-all flex items-center gap-1.5 sm:gap-2 text-xs shadow-lg cursor-pointer"
+                  title="Erase Selected Leads Permanently"
+                >
+                  <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>Erase ({selectedLeadIds.length})</span>
+                </button>
+              </div>
+            )}
+
+            {selectedLeadIds.length > 0 && activeTab !== 'BIN' && (
               <button
+                type="button"
                 onClick={handleBulkDelete}
-                className="p-2 sm:p-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-extrabold transition-all flex items-center gap-1.5 sm:gap-2 text-xs shadow-lg cursor-pointer animate-pulse"
-                title="Delete Selected Leads"
+                className="p-2 sm:p-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold transition-all flex items-center gap-1.5 sm:gap-2 text-xs shadow-lg cursor-pointer animate-pulse"
+                title="Move Selected Leads to Recycle Bin"
               >
                 <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>Delete ({selectedLeadIds.length})</span>
+                <span>Move to Bin ({selectedLeadIds.length})</span>
               </button>
             )}
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedLeadIds([]);
+                setActiveTab(activeTab === 'BIN' ? 'ALL' : 'BIN');
+              }}
+              className={`p-2 sm:p-2.5 rounded-xl border transition-all flex items-center gap-1.5 sm:gap-2 text-xs font-bold cursor-pointer ${
+                activeTab === 'BIN'
+                  ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-600/30 ring-2 ring-red-400/40'
+                  : 'bg-red-950/40 border-red-500/30 text-red-300 hover:bg-red-950/70'
+              }`}
+              title="View Recycle Bin"
+            >
+              <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 shrink-0" />
+              <span>Bin ({trashedInquiries.length})</span>
+            </button>
 
             <button
               onClick={() => setIsSecurityModalOpen(true)}
@@ -586,7 +781,8 @@ export default function AdminPage() {
               { label: 'ALL LEADS', key: 'ALL', count: inquiries.length },
               { label: 'NEW', key: 'NEW', count: newLeadsCount },
               { label: 'IN PROGRESS', key: 'IN_PROGRESS', count: inProgressCount },
-              { label: 'CLOSED', key: 'CLOSED', count: closedCount }
+              { label: 'CLOSED', key: 'CLOSED', count: closedCount },
+              { label: 'RECYCLE BIN', key: 'BIN', count: trashedInquiries.length, isBin: true }
             ].map(tab => (
               <button
                 key={tab.key}
@@ -594,6 +790,7 @@ export default function AdminPage() {
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => {
                   e.currentTarget.blur();
+                  setSelectedLeadIds([]);
                   const currentY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
                   setActiveTab(tab.key);
                   window.scrollTo({ top: currentY, behavior: 'instant' });
@@ -603,11 +800,15 @@ export default function AdminPage() {
                 }}
                 className={`relative px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer ${
                   activeTab === tab.key
-                    ? 'text-[#120722] font-black z-10'
+                    ? tab.isBin
+                      ? 'text-white bg-red-600 font-black shadow-lg shadow-red-600/30 z-10'
+                      : 'text-[#120722] font-black z-10'
+                    : tab.isBin
+                    ? 'bg-red-950/40 border border-red-500/30 text-red-300 hover:bg-red-950/70'
                     : 'bg-white/5 border border-white/10 text-[#d1c4e9] hover:bg-white/10'
                 }`}
               >
-                {activeTab === tab.key && (
+                {activeTab === tab.key && !tab.isBin && (
                   <motion.div
                     layoutId="activeAdminLeadTabPill"
                     className="absolute inset-0 bg-amber-400 rounded-xl shadow-lg pointer-events-none"
@@ -618,9 +819,12 @@ export default function AdminPage() {
                     }}
                   />
                 )}
+                {tab.isBin && <Trash2 className="w-3.5 h-3.5 shrink-0 text-red-400" />}
                 <span className="relative z-10">{tab.label}</span>
                 <span className={`relative z-10 px-1.5 py-0.5 rounded-md text-[10px] font-mono ${
-                  activeTab === tab.key ? 'bg-[#120722] text-amber-300' : 'bg-white/10 text-white'
+                  activeTab === tab.key 
+                    ? (tab.isBin ? 'bg-black/40 text-white' : 'bg-[#120722] text-amber-300')
+                    : (tab.isBin ? 'bg-red-500/20 text-red-300' : 'bg-white/10 text-white')
                 }`}>
                   {tab.count}
                 </span>
@@ -641,14 +845,66 @@ export default function AdminPage() {
         </div>
 
         <div id="admin-leads-section" className="space-y-6">
-          {filteredInquiries.length === 0 ? (
-            <div className="glass-card p-14 text-center rounded-3xl border border-amber-400/30 bg-[#16082b]">
-              <FileText className="w-14 h-14 text-amber-400/40 mx-auto mb-4 animate-bounce" />
-              <h3 className="text-xl font-bold text-white mb-2">No Leads Received Yet</h3>
-              <p className="text-xs sm:text-sm text-[#d1c4e9] max-w-md mx-auto leading-relaxed">
-                Your CRM database is 100% dynamic! Any form submission or meeting booked on the website will automatically pop up here with live sound notifications.
-              </p>
+          {activeTab === 'BIN' && (
+            <div className="glass-card p-4 sm:p-5 rounded-2xl border border-red-500/30 bg-red-950/20 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center shrink-0">
+                  <Trash2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <span>Recycle Bin ({trashedInquiries.length} Deleted Queries)</span>
+                  </h3>
+                  <p className="text-xs text-[#d1c4e9]">
+                    Deleted queries are held here safely. You can recover any query or clear the bin anytime.
+                  </p>
+                </div>
+              </div>
+
+              {trashedInquiries.length > 0 && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={promptClearBin}
+                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs flex items-center gap-1.5 shadow-lg transition-colors cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear Entire Bin</span>
+                  </button>
+                </div>
+              )}
             </div>
+          )}
+
+          {filteredInquiries.length === 0 ? (
+            activeTab === 'BIN' ? (
+              <div className="glass-card p-14 text-center rounded-3xl border border-white/10 bg-[#16082b]">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto mb-4">
+                  <ShieldCheck className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Recycle Bin is Empty</h3>
+                <p className="text-xs sm:text-sm text-[#d1c4e9] max-w-md mx-auto leading-relaxed mb-5">
+                  No deleted queries in the Recycle Bin. If any inquiry is deleted by mistake, it will be stored here safely.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('ALL')}
+                  className="btn-gold px-5 py-2 rounded-xl text-xs font-bold"
+                >
+                  Return to Active Leads
+                </button>
+              </div>
+            ) : (
+              <div className="glass-card p-14 text-center rounded-3xl border border-amber-400/30 bg-[#16082b]">
+                <FileText className="w-14 h-14 text-amber-400/40 mx-auto mb-4 animate-bounce" />
+                <h3 className="text-xl font-bold text-white mb-2">No Leads Received Yet</h3>
+                <p className="text-xs sm:text-sm text-[#d1c4e9] max-w-md mx-auto leading-relaxed">
+                  {searchQuery
+                    ? `No leads found matching "${searchQuery}". Try searching with different keywords.`
+                    : 'Your CRM database is 100% dynamic! Any form submission or meeting booked on the website will automatically pop up here with live sound notifications.'}
+                </p>
+              </div>
+            )
           ) : (
             filteredInquiries.map((inq) => (
               <div
@@ -658,12 +914,19 @@ export default function AdminPage() {
                 className={`glass-card p-4 sm:p-6 lg:p-7 rounded-2xl sm:rounded-3xl border transition-all relative overflow-hidden group cursor-pointer ${
                   highlightedInquiryId === inq.id
                     ? 'ring-4 ring-amber-400 border-amber-300 shadow-[0_0_50px_rgba(245,158,11,0.6)] scale-[1.015]'
+                    : inq.isDeleted
+                    ? 'border-red-500/30 bg-[#1a0822] opacity-90'
                     : !inq.read 
                     ? 'border-amber-400/70 bg-gradient-to-r from-[#260e47] via-[#1a0833] to-[#1a0833] shadow-[0_0_30px_rgba(245,158,11,0.2)]' 
                     : 'border-white/10 hover:border-amber-400/50 bg-[#16082b]'
                 }`}
               >
-                {!inq.read && (
+                {inq.isDeleted ? (
+                  <div className="absolute top-0 left-0 bg-red-600 text-white text-[9px] font-black px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-br-xl font-mono uppercase tracking-widest flex items-center gap-1">
+                    <Trash2 className="w-2.5 h-2.5" />
+                    <span>IN RECYCLE BIN {inq.deletedAt ? `• ${new Date(inq.deletedAt).toLocaleDateString()}` : ''}</span>
+                  </div>
+                ) : !inq.read && (
                   <div className="absolute top-0 left-0 bg-amber-400 text-[#120722] text-[9px] font-black px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-br-xl font-mono uppercase tracking-widest">
                     NEW UNREAD INQUIRY
                   </div>
@@ -892,18 +1155,47 @@ export default function AdminPage() {
                       )}
                     </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Are you sure you want to delete lead ${inq.name}?`)) {
-                          deleteInquiry(inq.id);
-                        }
-                      }}
-                      className="text-red-400 hover:text-red-300 text-[11px] font-semibold flex items-center justify-center gap-1 mt-0.5 cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Delete Lead</span>
-                    </button>
+                    {activeTab === 'BIN' ? (
+                      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/10 w-full">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRestoreLead(inq);
+                          }}
+                          className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-md"
+                          title="Restore lead to active pipeline"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>Recover</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            promptPermanentDeleteLead(inq);
+                          }}
+                          className="py-1.5 px-2.5 rounded-lg bg-red-950/60 hover:bg-red-900 border border-red-500/40 text-red-300 hover:text-white text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                          title="Erase permanently from database"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Erase</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          promptDeleteLead(inq);
+                        }}
+                        className="text-red-400 hover:text-red-300 text-[11px] font-semibold flex items-center justify-center gap-1 mt-0.5 cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Move to Bin</span>
+                      </button>
+                    )}
                   </div>
 
                 </div>
@@ -1103,6 +1395,13 @@ export default function AdminPage() {
                          selectedInquiry.type === 'general' ? 'CORPORATE / PARTNER' : 'SERVICE INQUIRY'}
                       </span>
                     </span>
+
+                    {selectedInquiry.isDeleted && (
+                      <span className="text-[11px] sm:text-xs font-mono font-bold px-2 py-0.5 rounded-lg border bg-red-600/20 text-red-300 border-red-500/40 flex items-center gap-1">
+                        <Trash2 className="w-3 h-3 text-red-400" />
+                        <span>IN RECYCLE BIN</span>
+                      </span>
+                    )}
                   </div>
 
                   <button
@@ -1441,20 +1740,46 @@ export default function AdminPage() {
 
             {/* Pinned Footer */}
             <div className="p-4 sm:p-6 pt-3 sm:pt-4 border-t border-white/10 bg-[#120524]/95 backdrop-blur-md flex items-center justify-between gap-4 shrink-0">
-              <button
-                onClick={() => {
-                  if (window.confirm(`Are you sure you want to delete lead ${selectedInquiry.name}?`)) {
-                    deleteInquiry(selectedInquiry.id);
-                    setSelectedInquiry(null);
-                  }
-                }}
-                className="text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Delete Lead</span>
-              </button>
+              {selectedInquiry.isDeleted ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleRestoreLead(selectedInquiry);
+                      setSelectedInquiry(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-lg transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Recover Lead</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      promptPermanentDeleteLead(selectedInquiry);
+                    }}
+                    className="text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1 cursor-pointer px-2 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Erase Permanently</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    promptDeleteLead(selectedInquiry);
+                  }}
+                  className="text-red-400 hover:text-red-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Move to Bin</span>
+                </button>
+              )}
 
               <button
+                type="button"
                 onClick={() => setSelectedInquiry(null)}
                 className="btn-gold px-6 py-2.5 rounded-xl text-xs font-black cursor-pointer shadow-lg"
               >
@@ -1462,6 +1787,87 @@ export default function AdminPage() {
               </button>
             </div>
 
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* THEMED CONFIRMATION MODAL POPUP */}
+      {confirmModal.isOpen && typeof document !== 'undefined' && createPortal(
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setConfirmModal(prev => ({ ...prev, isOpen: false }));
+          }}
+          className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
+        >
+          <div className="relative w-full max-w-md glass-card rounded-3xl border border-amber-400/40 bg-[#180933] shadow-[0_0_50px_rgba(245,158,11,0.2)] p-6 sm:p-7 text-center overflow-hidden my-auto animate-scaleUp">
+            {/* Ambient background glows */}
+            <div className={`absolute -top-12 -left-12 w-36 h-36 rounded-full blur-3xl pointer-events-none ${
+              confirmModal.confirmColor === 'red' ? 'bg-red-500/20' :
+              confirmModal.confirmColor === 'emerald' ? 'bg-emerald-500/20' : 'bg-amber-400/20'
+            }`} />
+            <div className={`absolute -bottom-12 -right-12 w-36 h-36 rounded-full blur-3xl pointer-events-none ${
+              confirmModal.confirmColor === 'red' ? 'bg-red-500/15' : 'bg-amber-400/15'
+            }`} />
+
+            {/* Icon Badge */}
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 border shadow-lg relative z-10 ${
+              confirmModal.iconType === 'trash'
+                ? 'bg-amber-400/15 border-amber-400/30 text-amber-400 shadow-amber-400/10'
+                : confirmModal.iconType === 'restore'
+                ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 shadow-emerald-500/10'
+                : 'bg-red-500/15 border-red-500/30 text-red-400 shadow-red-500/10'
+            }`}>
+              {confirmModal.iconType === 'trash' && <Trash2 className="w-7 h-7" />}
+              {confirmModal.iconType === 'restore' && <RotateCcw className="w-7 h-7" />}
+              {(confirmModal.iconType === 'permanent' || confirmModal.iconType === 'clearBin') && (
+                <AlertTriangle className="w-7 h-7" />
+              )}
+            </div>
+
+            {/* Title & Description */}
+            <h3 className="text-lg sm:text-xl font-black font-heading text-white mb-2 relative z-10">
+              {confirmModal.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-[#d1c4e9] leading-relaxed mb-6 relative z-10">
+              {confirmModal.description}
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3 relative z-10">
+              <button
+                type="button"
+                onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/10 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const action = confirmModal.onConfirm;
+                  setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                  if (typeof action === 'function') action();
+                }}
+                className={`flex-1 py-2.5 px-4 rounded-xl font-black text-xs shadow-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  confirmModal.confirmColor === 'red'
+                    ? 'bg-red-600 hover:bg-red-500 text-white shadow-red-600/30'
+                    : confirmModal.confirmColor === 'emerald'
+                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30'
+                    : 'bg-amber-400 hover:bg-amber-300 text-[#120722] shadow-amber-400/30'
+                }`}
+              >
+                {confirmModal.confirmColor === 'red' ? (
+                  <Trash2 className="w-3.5 h-3.5" />
+                ) : confirmModal.confirmColor === 'emerald' ? (
+                  <RotateCcw className="w-3.5 h-3.5" />
+                ) : (
+                  <Trash2 className="w-3.5 h-3.5" />
+                )}
+                <span>{confirmModal.confirmLabel || 'Confirm'}</span>
+              </button>
+            </div>
           </div>
         </div>,
         document.body

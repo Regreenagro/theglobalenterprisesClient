@@ -106,7 +106,7 @@ export function InquiryProvider({ children }) {
   const syncInquiriesState = useCallback((data) => {
     if (!Array.isArray(data)) return;
     setInquiries(data);
-    setUnreadCount(data.filter((item) => !item.read).length);
+    setUnreadCount(data.filter((item) => !item.isDeleted && !item.read).length);
     try {
       localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(data));
     } catch {
@@ -408,8 +408,13 @@ export function InquiryProvider({ children }) {
     if (!token) return;
 
     setInquiries((prev) => {
-      const updated = prev.filter((inq) => inq.id !== id);
-      setUnreadCount(updated.filter((item) => !item.read).length);
+      const updated = prev.map((inq) => 
+        inq.id === id ? { ...inq, isDeleted: true, deletedAt: new Date().toISOString() } : inq
+      );
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
       return updated;
     });
 
@@ -425,12 +430,91 @@ export function InquiryProvider({ children }) {
     }
   };
 
+  const restoreInquiry = async (id) => {
+    if (!token) return;
+
+    setInquiries((prev) => {
+      const updated = prev.map((inq) => 
+        inq.id === id ? { ...inq, isDeleted: false, deletedAt: null } : inq
+      );
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`${API_BASE}/inquiries/${id}/restore`, { 
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    } catch {
+      // Offline fallback safe
+    }
+  };
+
+  const permanentDeleteInquiry = async (id) => {
+    if (!token) return;
+
+    setInquiries((prev) => {
+      const updated = prev.filter((inq) => inq.id !== id);
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`${API_BASE}/inquiries/${id}?permanent=true`, { 
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    } catch {
+      // Offline fallback safe
+    }
+  };
+
+  const clearBin = async () => {
+    if (!token) return;
+
+    setInquiries((prev) => {
+      const updated = prev.filter((inq) => !inq.isDeleted);
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`${API_BASE}/inquiries/bin/clear`, { 
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+    } catch {
+      // Offline fallback safe
+    }
+  };
+
   const bulkDeleteInquiries = async (ids) => {
     if (!token || !Array.isArray(ids) || ids.length === 0) return;
 
     setInquiries((prev) => {
-      const updated = prev.filter((inq) => !ids.includes(inq.id));
-      setUnreadCount(updated.filter((item) => !item.read).length);
+      const updated = prev.map((inq) => 
+        ids.includes(inq.id) ? { ...inq, isDeleted: true, deletedAt: new Date().toISOString() } : inq
+      );
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
       return updated;
     });
 
@@ -448,14 +532,74 @@ export function InquiryProvider({ children }) {
     }
   };
 
+  const bulkRestoreInquiries = async (ids) => {
+    if (!token || !Array.isArray(ids) || ids.length === 0) return;
+
+    setInquiries((prev) => {
+      const updated = prev.map((inq) => 
+        ids.includes(inq.id) ? { ...inq, isDeleted: false, deletedAt: null } : inq
+      );
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`${API_BASE}/inquiries/bulk-restore`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ids }),
+      });
+    } catch {
+      // Offline fallback safe
+    }
+  };
+
+  const bulkPermanentDeleteInquiries = async (ids) => {
+    if (!token || !Array.isArray(ids) || ids.length === 0) return;
+
+    setInquiries((prev) => {
+      const updated = prev.filter((inq) => !ids.includes(inq.id));
+      setUnreadCount(updated.filter((item) => !item.isDeleted && !item.read).length);
+      try {
+        localStorage.setItem(STORAGE_KEYS.INQUIRIES, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    try {
+      await fetch(`${API_BASE}/inquiries/bulk-delete?permanent=true`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ ids }),
+      });
+    } catch {
+      // Offline fallback safe
+    }
+  };
+
+  const activeInquiries = useMemo(() => inquiries.filter((item) => !item.isDeleted), [inquiries]);
+  const trashedInquiries = useMemo(() => inquiries.filter((item) => Boolean(item.isDeleted)), [inquiries]);
+
   const contextValue = useMemo(
     () => ({
-      inquiries,
+      inquiries: activeInquiries,
+      allInquiries: inquiries,
+      trashedInquiries,
       unreadCount,
       adminUser,
       isLoggedIn,
       isLoading,
       toastNotification,
+      showToast,
       soundEnabled,
       setSoundEnabled,
       isAdminLoginOpen,
@@ -472,18 +616,26 @@ export function InquiryProvider({ children }) {
       markAsRead,
       markAllAsRead,
       deleteInquiry,
+      restoreInquiry,
+      permanentDeleteInquiry,
+      clearBin,
       bulkDeleteInquiries,
+      bulkRestoreInquiries,
+      bulkPermanentDeleteInquiries,
       requestOTP,
       changePassword,
       playChime: playNotificationChime,
     }),
     [
+      activeInquiries,
       inquiries,
+      trashedInquiries,
       unreadCount,
       adminUser,
       isLoggedIn,
       isLoading,
       toastNotification,
+      showToast,
       soundEnabled,
       isAdminLoginOpen,
       openAdminLogin,
