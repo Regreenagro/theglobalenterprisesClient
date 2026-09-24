@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import {
   ArrowRight,
@@ -206,71 +206,122 @@ export default function CapabilitiesMatrix({ onOpenSchedule }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search catalog..."
-              className="w-full bg-[#180933] border border-white/15 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-400"
+              className="w-full bg-[#180933] border border-white/15 rounded-xl py-2 pl-9 pr-8 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-0.5 rounded cursor-pointer"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map((prod) => (
-            <div
-              key={prod.id}
-              className="glass-card rounded-3xl border border-white/10 hover:border-amber-400/50 transition-all duration-300 flex flex-col overflow-hidden group bg-[#16082b]"
+        <motion.div 
+          layout 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[360px]"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProducts.map((prod) => (
+              <motion.div
+                key={prod.id}
+                layout
+                initial={{ opacity: 0, scale: 0.86, y: 22 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.86, y: -22, transition: { duration: 0.2 } }}
+                transition={{
+                  layout: { type: "spring", stiffness: 360, damping: 28 },
+                  opacity: { duration: 0.25 },
+                  scale: { duration: 0.25 }
+                }}
+                className="glass-card rounded-3xl border border-white/10 hover:border-amber-400/50 transition-colors duration-300 flex flex-col overflow-hidden group bg-[#16082b]"
+              >
+                <div className="relative aspect-[16/11] overflow-hidden bg-black">
+                  <img
+                    src={prod.image}
+                    alt={`${prod.title} - ${prod.categoryLabel} Infrastructure System`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#140828] via-transparent to-transparent"></div>
+
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#10061e]/90 border border-amber-400/40 text-[10px] font-bold text-amber-300 uppercase tracking-widest backdrop-blur-md">
+                    {prod.categoryLabel}
+                  </div>
+                </div>
+
+                <div className="p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <h3 className="text-lg font-bold font-heading text-white group-hover:text-amber-300 transition-colors mb-2">
+                      {prod.title}
+                    </h3>
+                    <div className="p-2.5 rounded-xl bg-[#10061e] border border-white/10 text-[11px] text-[#c4b5fd] font-mono mb-4 leading-relaxed">
+                      {prod.specs}
+                    </div>
+                    <div className="text-[11px] text-[#b8a7dc]">
+                      <span className="font-bold text-white">Applications:</span> {prod.applications}
+                    </div>
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => setSelectedProductModal(prod)}
+                      className="text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Info className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Know More</span>
+                    </button>
+
+                    <button
+                      onClick={() => onOpenSchedule({
+                        type: 'inquiry',
+                        service: prod.title,
+                        title: `Inquire: ${prod.title}`,
+                        subtitle: `Direct technical specification and deployment for ${prod.categoryLabel}`
+                      })}
+                      className="btn-gold px-3.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Inquire</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {filteredProducts.length === 0 && (
+            <motion.div
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="col-span-full py-16 text-center flex flex-col items-center justify-center bg-white/[0.02] border border-white/10 rounded-3xl"
             >
-              <div className="relative aspect-[16/11] overflow-hidden bg-black">
-                <img
-                  src={prod.image}
-                  alt={`${prod.title} - ${prod.categoryLabel} Infrastructure System`}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#140828] via-transparent to-transparent"></div>
-
-                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#10061e]/90 border border-amber-400/40 text-[10px] font-bold text-amber-300 uppercase tracking-widest backdrop-blur-md">
-                  {prod.categoryLabel}
-                </div>
+              <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center mb-4 text-amber-400">
+                <Search className="w-7 h-7" />
               </div>
-
-              <div className="p-6 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 className="text-lg font-bold font-heading text-white group-hover:text-amber-300 transition-colors mb-2">
-                    {prod.title}
-                  </h3>
-                  <div className="p-2.5 rounded-xl bg-[#10061e] border border-white/10 text-[11px] text-[#c4b5fd] font-mono mb-4 leading-relaxed">
-                    {prod.specs}
-                  </div>
-                  <div className="text-[11px] text-[#b8a7dc]">
-                    <span className="font-bold text-white">Applications:</span> {prod.applications}
-                  </div>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => setSelectedProductModal(prod)}
-                    className="text-xs font-bold text-amber-300 hover:text-amber-200 flex items-center gap-1 cursor-pointer"
-                  >
-                    <Info className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Know More</span>
-                  </button>
-
-                  <button
-                    onClick={() => onOpenSchedule({
-                      type: 'inquiry',
-                      service: item.title,
-                      title: `Inquire: ${item.title}`,
-                      subtitle: `Direct technical specification and deployment for ${item.category}`
-                    })}
-                    className="btn-gold px-3.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Inquire</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              <h4 className="text-lg font-bold text-white mb-2">No matching products found</h4>
+              <p className="text-xs text-gray-400 max-w-sm mb-5">
+                No catalog items matched your query &ldquo;{searchQuery}&rdquo;. Try another keyword or clear your active filter.
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveFilter('all');
+                }}
+                className="btn-gold px-5 py-2 rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Reset Filters
+              </button>
+            </motion.div>
+          )}
+        </motion.div>
 
         {selectedProductModal && typeof document !== 'undefined' && createPortal(
           <div
