@@ -134,6 +134,17 @@ export default function Navbar({ onOpenSchedule }) {
     document.documentElement.style.overflow = '';
   }, [location.pathname]);
 
+  // Close mobile drawer automatically when viewport is resized to desktop width (>= 1024px)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Click outside listener
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -167,10 +178,10 @@ export default function Navbar({ onOpenSchedule }) {
             </div>
           </Link>
 
-          <div className="hidden xl:flex items-center gap-2 2xl:gap-3.5 flex-nowrap font-bold">
+          <div className="hidden lg:flex items-center gap-1 lg:gap-1.5 xl:gap-2.5 2xl:gap-3.5 flex-nowrap font-bold">
             <Link
               to="/"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Home
@@ -187,7 +198,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/about"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/about' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/about' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               About Us
@@ -211,7 +222,7 @@ export default function Navbar({ onOpenSchedule }) {
               <div className="flex items-center">
                 <Link
                   to="/services"
-                  className={`text-[11px] 2xl:text-xs font-bold transition-colors flex items-center gap-0.5 cursor-pointer py-1 whitespace-nowrap relative group ${location.pathname === '/services' || servicesDropdownOpen ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+                  className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors flex items-center gap-0.5 cursor-pointer py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/services' || servicesDropdownOpen ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                     }`}
                 >
                   <span>What We Do</span>
@@ -354,7 +365,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/capabilities"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/capabilities' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/capabilities' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Capabilities
@@ -371,7 +382,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/values"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/values' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/values' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Core Values
@@ -388,7 +399,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/mission"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/mission' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/mission' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Mission
@@ -405,7 +416,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/clients"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/clients' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/clients' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Client Trust
@@ -422,7 +433,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <Link
               to="/contact"
-              className={`text-[11px] 2xl:text-xs font-bold transition-colors py-1 whitespace-nowrap relative group ${location.pathname === '/contact' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
+              className={`text-[11px] xl:text-[11.5px] 2xl:text-xs font-bold transition-colors py-1 px-1 xl:px-1.5 whitespace-nowrap relative group ${location.pathname === '/contact' ? 'text-amber-400' : 'text-[#d1c4e9] hover:text-amber-300'
                 }`}
             >
               Contact
@@ -438,10 +449,10 @@ export default function Navbar({ onOpenSchedule }) {
             </Link>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-2 xl:gap-2.5 shrink-0">
             <a
               href="tel:+919899933768"
-              className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-xl bg-[#1b0a36] border border-white/15 hover:border-amber-400 text-white hover:text-amber-300 transition-all shadow-md shrink-0"
+              className="flex items-center gap-1.5 p-2 sm:px-2.5 sm:py-2 xl:px-3 rounded-xl bg-[#1b0a36] border border-white/15 hover:border-amber-400 text-white hover:text-amber-300 transition-all shadow-md shrink-0"
               title="Call Us: +91 98999 33768"
             >
               <PhoneCall className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
@@ -451,7 +462,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <button
               onClick={() => onOpenSchedule({ type: 'meeting', title: 'Schedule Strategy Consultation' })}
-              className="btn-gold p-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-xs flex items-center gap-1.5 cursor-pointer font-extrabold shadow-xl shrink-0 whitespace-nowrap"
+              className="btn-gold p-2 sm:px-3 sm:py-2 xl:px-4 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer font-extrabold shadow-xl shrink-0 whitespace-nowrap"
               title="Schedule a meeting"
             >
               <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -460,7 +471,7 @@ export default function Navbar({ onOpenSchedule }) {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-xl bg-[#220e3f] border border-amber-400/40 text-amber-300 hover:text-white hover:bg-amber-400/20 transition-all shrink-0 cursor-pointer shadow-lg"
+              className="lg:hidden p-2 rounded-xl bg-[#220e3f] border border-amber-400/40 text-amber-300 hover:text-white hover:bg-amber-400/20 transition-all shrink-0 cursor-pointer shadow-lg"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -470,7 +481,7 @@ export default function Navbar({ onOpenSchedule }) {
       </nav>
 
       {mobileMenuOpen && (
-        <div className="xl:hidden flex-1 w-full bg-[#0c0317] px-4 sm:px-6 py-5 overflow-y-auto flex flex-col justify-between shadow-inner relative animate-mobile-menu">
+        <div className="lg:hidden flex-1 w-full bg-[#0c0317] px-4 sm:px-6 py-5 overflow-y-auto flex flex-col justify-between shadow-inner relative animate-mobile-menu">
           {/* Ambient Glows */}
           <div className="bg-glow-orb w-[260px] h-[260px] bg-purple-600/15 top-10 right-0 pointer-events-none"></div>
           <div className="bg-glow-orb w-[220px] h-[220px] bg-amber-500/10 bottom-20 left-0 pointer-events-none"></div>
