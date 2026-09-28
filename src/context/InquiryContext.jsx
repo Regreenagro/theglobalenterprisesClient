@@ -155,11 +155,30 @@ export function InquiryProvider({ children }) {
   }, [token, logout, syncInquiriesState]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      fetchInquiries();
-      const interval = setInterval(fetchInquiries, 8000);
-      return () => clearInterval(interval);
-    }
+    if (!isLoggedIn) return;
+
+    fetchInquiries();
+    let interval = setInterval(fetchInquiries, 10000);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchInquiries();
+        if (!interval) {
+          interval = setInterval(fetchInquiries, 10000);
+        }
+      } else {
+        if (interval) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      if (interval) clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [isLoggedIn, fetchInquiries]);
 
   const showToast = useCallback((toast, duration = 6000) => {

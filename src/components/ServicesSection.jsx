@@ -51,24 +51,30 @@ export default function ServicesSection({ onOpenSchedule }) {
 
   // Track scroll position to show floating left drawer ONLY on desktop screens when scrolled deeply down
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      // Only active on desktop (lg and above >= 1024px)
-      if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-        if (showFloatingMenu) setShowFloatingMenu(false);
-        return;
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        // Only active on desktop (lg and above >= 1024px)
+        if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+          setShowFloatingMenu(false);
+          return;
+        }
 
-      const el = document.getElementById('services-interactive');
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      
-      // Show ONLY when user has scrolled deeply into the capabilities/middle section (rect.top < -350)
-      if (rect.top < -350 && rect.bottom > 300) {
-        setShowFloatingMenu(true);
-      } else {
-        setShowFloatingMenu(false);
-        setIsDrawerOpen(false);
-      }
+        const el = document.getElementById('services-interactive');
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        
+        // Show ONLY when user has scrolled deeply into the capabilities/middle section (rect.top < -350)
+        if (rect.top < -350 && rect.bottom > 300) {
+          setShowFloatingMenu(true);
+        } else {
+          setShowFloatingMenu(false);
+          setIsDrawerOpen(false);
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
