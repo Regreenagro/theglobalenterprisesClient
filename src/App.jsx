@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { InquiryProvider, useInquiry } from './context/InquiryContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -57,6 +57,7 @@ function AppContent() {
         <main className="flex-1">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
+              {/* Primary Pages */}
               <Route path="/" element={<HomePage onOpenSchedule={openModal} />} />
               <Route path="/about" element={<AboutPage onOpenSchedule={openModal} />} />
               <Route path="/services" element={<ServicesPage onOpenSchedule={openModal} />} />
@@ -65,9 +66,24 @@ function AppContent() {
               <Route path="/mission" element={<MissionPage onOpenSchedule={openModal} />} />
               <Route path="/clients" element={<ClientsPage onOpenSchedule={openModal} />} />
               <Route path="/contact" element={<ContactPage />} />
+
+              {/* Redirects to Single Services Page with target service tab */}
+              <Route path="/cctv-security-surveillance" element={<Navigate to="/services?service=security_monitoring" replace />} />
+              <Route path="/access-control-systems" element={<Navigate to="/services?service=security_monitoring" replace />} />
+              <Route path="/fire-safety-solutions" element={<Navigate to="/services?service=fire_safety_rodent" replace />} />
+              <Route path="/boardroom-av-solutions" element={<Navigate to="/services?service=audio_video" replace />} />
+              <Route path="/network-connectivity" element={<Navigate to="/services?service=network_connectivity" replace />} />
+              <Route path="/office-fitout-solutions" element={<Navigate to="/services?service=fitout_leasehold" replace />} />
+              <Route path="/precision-moulding" element={<Navigate to="/services?service=injection_moulding" replace />} />
+              <Route path="/services/:serviceSlug" element={<Navigate to="/services" replace />} />
+
+              {/* Admin Portal */}
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
               <Route path="/admin-login" element={<AdminLoginPage />} />
+
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
         </main>

@@ -1,71 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  
-  <!-- Home Overview -->
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://globalenterprises.in/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/headquarters.webp</image:loc>
+      <image:title>Global Enterprises Headquarters CR Park New Delhi</image:title>
+      <image:caption>Commercial CCTV, Access Control &amp; Office Fit-Out Solutions Delhi NCR</image:caption>
+    </image:image>
   </url>
-
-  <!-- Services & Solutions -->
   <url>
-    <loc>https://globalenterprises.in/#/services</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://globalenterprises.in/services</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/cctv.webp</image:loc>
+      <image:title>Specialized Commercial Service Domains</image:title>
+      <image:caption>4K CCTV, Access Control, Fire Safety, Boardroom AV, Network IT &amp; Office Fit-Outs</image:caption>
+    </image:image>
   </url>
-
-  <!-- About Us -->
   <url>
-    <loc>https://globalenterprises.in/#/about</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://globalenterprises.in/about</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/headquarters.webp</image:loc>
+      <image:title>About Global Enterprises Sachin &amp; Vasu Arora</image:title>
+      <image:caption>Over a decade of engineering excellence in CR Park, New Delhi</image:caption>
+    </image:image>
   </url>
-
-  <!-- Hardware & Systems Capabilities -->
   <url>
-    <loc>https://globalenterprises.in/#/capabilities</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://globalenterprises.in/capabilities</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/speedgates.webp</image:loc>
+      <image:title>Security Hardware &amp; Systems Matrix</image:title>
+      <image:caption>Commercial security equipment specifications and partner hardware matrix</image:caption>
+    </image:image>
   </url>
-
-  <!-- Client Trust & Community -->
   <url>
-    <loc>https://globalenterprises.in/#/clients</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://globalenterprises.in/clients</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/firesafety.webp</image:loc>
+      <image:title>Enterprise Clients Portfolio</image:title>
+      <image:caption>Trusted by Indigo, FedEx, Air India, Cosmo First and corporate facilities</image:caption>
+    </image:image>
   </url>
-
-  <!-- Contact & Turnkey Consultation -->
   <url>
-    <loc>https://globalenterprises.in/#/contact</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://globalenterprises.in/contact</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.90</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/headquarters.webp</image:loc>
+      <image:title>Contact CR Park Headquarters New Delhi</image:title>
+      <image:caption>Technical site audit, custom BOQ proposals and consultation</image:caption>
+    </image:image>
   </url>
-
-  <!-- Core Values -->
   <url>
-    <loc>https://globalenterprises.in/#/values</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://globalenterprises.in/values</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/workspace.webp</image:loc>
+      <image:title>Core Operating Values &amp; Corporate Ethics</image:title>
+      <image:caption>Quality, Timeliness, Fair Value, Dedication and Integrity</image:caption>
+    </image:image>
   </url>
-
-  <!-- Mission & Vision -->
   <url>
-    <loc>https://globalenterprises.in/#/mission</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://globalenterprises.in/mission</loc>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
+    <priority>0.70</priority>
+    <image:image>
+      <image:loc>https://globalenterprises.in/images/hero_bg.webp</image:loc>
+      <image:title>Mission &amp; Strategic Vision</image:title>
+      <image:caption>Engineering safe, smart, and sustainable commercial workspaces across India</image:caption>
+    </image:image>
   </url>
-  
 </urlset>

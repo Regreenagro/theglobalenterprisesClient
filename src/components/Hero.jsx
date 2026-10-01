@@ -19,7 +19,7 @@ export default function Hero({ onOpenSchedule }) {
       title: '4K Optical Surveillance & Smart Access',
       category: 'SECURITY & MONITORING',
       badge: '4K CCTV & ACCESS CONTROL',
-      image: '/images/cctv.jpg',
+      image: '/images/cctv.webp',
       specs: ['3840x2160 Ultra-HD Starlight CCTV', 'Biometric Speed Gates & Turnstiles', 'Dorset Smart Locks & Cloud VMS'],
       tagline: '24/7 visual surveillance, access control, and perimeter protection.'
     },
@@ -29,7 +29,7 @@ export default function Hero({ onOpenSchedule }) {
       title: 'Boardroom & Conference Collaboration',
       category: 'AUDIO & VIDEO',
       badge: '4K CONFERENCING & PA',
-      image: '/images/av_room.jpg',
+      image: '/images/av_room.webp',
       specs: ['Ceiling Beamforming Audio Array', 'Wireless Screen Sharing & Presentation', 'Digital Signage & Sound Systems'],
       tagline: 'Smart boardrooms, video conferencing walls, and public address systems.'
     },
@@ -39,7 +39,7 @@ export default function Hero({ onOpenSchedule }) {
       title: 'Certified Fire Alarm & Hazard Systems',
       category: 'FIRE SAFETY & RESILIENCE',
       badge: 'NBC 2016 COMPLIANT',
-      image: '/images/firesafety.jpg',
+      image: '/images/firesafety.webp',
       specs: ['Optical Thermal Smoke Detection', 'Addressable Fire Panels & Sprinklers', 'Water Leak Sensing & Rodent Control'],
       tagline: 'Early warning detection, automated suppression, and complete code compliance.'
     },
@@ -49,7 +49,7 @@ export default function Hero({ onOpenSchedule }) {
       title: 'High-Speed Enterprise Network & IT',
       category: 'NETWORK & CONNECTIVITY',
       badge: 'ENTERPRISE IT & WI-FI 6',
-      image: '/images/headquarters.jpg',
+      image: '/images/headquarters.webp',
       specs: ['Enterprise Wi-Fi 6 & Managed Switching', 'VoIP Telephony & Wireless P2P Links', 'High-Density Server Room Infrastructure'],
       tagline: 'Scalable wireless network architecture, high-bandwidth links, and clean cabling.'
     },
@@ -59,7 +59,7 @@ export default function Hero({ onOpenSchedule }) {
       title: 'Ergonomic Workspace Fit-Outs',
       category: 'FIT-OUT & INTERIORS',
       badge: 'WORKSPACE FIT-OUT',
-      image: '/images/workspace.jpg',
+      image: '/images/workspace.webp',
       specs: ['Modular Workstations & Ergonomic Furniture', 'Acoustic Glass Partitions & Ceilings', 'Full MEP, Lighting & Commercial Flooring'],
       tagline: 'Workspaces designed for comfort, collaboration, and productivity.'
     },
@@ -69,7 +69,7 @@ export default function Hero({ onOpenSchedule }) {
       title: 'Precision Injection Moulding Solutions',
       category: 'INJECTION MOULDING',
       badge: 'PRECISION MANUFACTURING',
-      image: '/images/injection_moulding.jpg',
+      image: '/images/injection_moulding.webp',
       specs: ['Job Work on Existing Client Moulds', 'Design for Manufacturing & Prototyping', 'Certified Precision Quality Control'],
       tagline: 'Agile injection moulding job work and custom end-to-end product manufacturing.'
     }
@@ -88,15 +88,18 @@ export default function Hero({ onOpenSchedule }) {
   return (
     <section id="home" className="relative pt-14 sm:pt-16 lg:pt-[66px] pb-8 sm:pb-10 flex flex-col overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img
-          src="/images/hero_bg.jpg"
-          alt="Global Enterprises Integrated Workspace & 4K CCTV Security Infrastructure"
-          width="1920"
-          height="1080"
-          fetchpriority="high"
-          decoding="async"
-          className="w-full h-full object-cover object-center opacity-30 scale-105"
-        />
+        <picture>
+          <source srcSet="/images/hero_bg.webp" type="image/webp" />
+          <img
+            src="/images/hero_bg.jpg"
+            alt="Global Enterprises Integrated Workspace &amp; 4K CCTV Security Infrastructure Delhi NCR"
+            width="1920"
+            height="1080"
+            fetchpriority="high"
+            decoding="async"
+            className="w-full h-full object-cover object-center opacity-30 scale-105"
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0e0419]/95 via-[#120722]/85 to-[#120722]"></div>
         <div className="absolute inset-0 bg-radial-hero"></div>
         <div className="absolute inset-0 bg-tech-grid opacity-60"></div>

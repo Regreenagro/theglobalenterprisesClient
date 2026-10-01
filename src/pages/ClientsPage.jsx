@@ -13,11 +13,16 @@ export default function ClientsPage({ onOpenSchedule }) {
     <div className="pt-20">
       <div className="relative min-h-[320px] sm:min-h-[360px] flex items-center justify-center overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/images/firesafety.jpg"
-            alt="Mission Critical Security & Corporate Clients"
-            className="w-full h-full object-cover object-center opacity-35 scale-105"
-          />
+          <picture>
+            <source srcSet="/images/firesafety.webp" type="image/webp" />
+            <img
+              src="/images/firesafety.jpg"
+              alt="Mission Critical Security & Corporate Clients Across Delhi NCR"
+              className="w-full h-full object-cover object-center opacity-35 scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-[#0d041a]/95 via-[#120722]/85 to-[#120722]"></div>
           <div className="absolute inset-0 bg-tech-grid opacity-60"></div>
         </div>

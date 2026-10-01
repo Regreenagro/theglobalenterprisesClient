@@ -183,14 +183,33 @@ export default function ServicesSection({ onOpenSchedule }) {
         </div>
 
         {/* Main Detailed Service Content Card */}
-        <div className="glass-card rounded-3xl border border-white/15 overflow-hidden shadow-2xl p-6 sm:p-10 bg-gradient-to-br from-[#1b0a36] via-[#140828] to-[#1c0b38] min-h-[580px]" style={{ overflowAnchor: 'none' }}>
-          <div className="mb-8 pb-8 border-b border-white/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-2.5">
+        <div className="glass-card rounded-3xl border border-white/15 overflow-hidden shadow-2xl p-6 sm:p-10 bg-gradient-to-br from-[#1b0a36] via-[#140828] to-[#1c0b38] min-h-[580px] relative" style={{ overflowAnchor: 'none' }}>
+          
+          {/* Active Service Header with Dynamic Image Overlay */}
+          <div className="relative mb-8 p-6 sm:p-8 rounded-2xl border border-white/15 overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-2xl group">
+            {/* Background image overlay customized per active service */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+              <picture>
+                <source srcSet={current.image} type="image/webp" />
+                <img
+                  key={`service-header-overlay-${current.id || activeTab}`}
+                  src={current.image}
+                  alt={current.title}
+                  className="w-full h-full object-cover object-center opacity-30 scale-105 transition-all duration-700 ease-out"
+                  loading="lazy"
+                />
+              </picture>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0e0419]/95 via-[#140828]/85 to-[#0e0419]/60"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#140828] via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-tech-grid opacity-40"></div>
+            </div>
+
+            <div className="relative z-10 max-w-3xl">
+              <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg bg-amber-400/15 border border-amber-400/40 text-amber-300 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-2.5 backdrop-blur-md shadow-sm">
                 <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
                 <span className="leading-snug">{current.subHeadline}</span>
               </div>
-              <h3 className="text-lg sm:text-2xl lg:text-3xl font-extrabold font-heading text-white tracking-tight leading-snug mb-2 sm:mb-3">
+              <h3 className="text-lg sm:text-2xl lg:text-3xl font-extrabold font-heading text-white tracking-tight leading-snug mb-2 sm:mb-3 drop-shadow-md">
                 {current.headline}
               </h3>
               {current.introTitle && (
@@ -198,19 +217,20 @@ export default function ServicesSection({ onOpenSchedule }) {
                   {current.introTitle}
                 </h4>
               )}
-              <p className="text-xs sm:text-sm text-[#d1c4e9] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#d1c4e9] leading-relaxed drop-shadow-sm">
                 {current.intro}
               </p>
             </div>
 
             <button
+              type="button"
               onClick={() => onOpenSchedule({
                 type: 'inquiry',
                 service: current.title,
                 title: `Inquire: ${current.title}`,
                 subtitle: `Direct engineering inquiry for ${current.title}`
               })}
-              className="btn-gold px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 cursor-pointer shadow-xl shrink-0 self-start lg:self-center"
+              className="relative z-10 btn-gold px-6 sm:px-7 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 cursor-pointer shadow-xl shrink-0 self-start lg:self-center"
             >
               <span>{current.ctaText}</span>
               <ArrowRight className="w-4 h-4" />

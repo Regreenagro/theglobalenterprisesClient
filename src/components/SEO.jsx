@@ -1,86 +1,86 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const BASE_URL = 'https://theglobalenterprises.vercel.app';
+const BASE_URL = 'https://globalenterprises.in';
 
-const pageSEOMap = {
+const staticSEOMap = {
   '/': {
-    title: 'Global Enterprises | Integrated Workspace & Security Solutions | Delhi NCR',
-    description: 'Global Enterprises is an ISO certified single-window partner providing 4K CCTV surveillance, Dorset smart door locks, access control, boardroom AV, fire safety, and turnkey office fit-outs across Delhi NCR and India.',
-    keywords: 'CCTV surveillance Delhi NCR, office fit-outs India, Dorset smart locks, access control systems, biometric attendance, fire alarm systems, boardroom audio visual, IT network cabling, turnkey security contractors, Global Enterprises CR Park',
-    image: '/images/headquarters.jpg',
+    title: 'Global Enterprises | Commercial CCTV, Access Control & Office Fit-Out Delhi NCR',
+    description: 'Premier Delhi NCR contractor for 4K CCTV surveillance, biometric access control, certified fire alarms, boardroom AV, and turnkey commercial office fit-outs. Free site audit.',
+    keywords: 'CCTV surveillance Delhi NCR, office fit-outs Delhi, access control systems, biometric attendance, fire alarm systems NBC 2016, boardroom audio visual, turnkey security contractors, Global Enterprises CR Park, South Delhi',
+    image: '/images/headquarters.webp',
     type: 'website',
     isIndexable: true,
     pageName: 'Home'
   },
   '/about': {
-    title: 'About Global Enterprises | Turnkey Workspace & Security Leaders Since 2012',
-    description: 'Founded in 2012 by Sachin and Rajni Arora, Global Enterprises delivers turnkey technology integration, security infrastructure, and office environments from CR Park, New Delhi.',
-    keywords: 'Global Enterprises Sachin Arora, security contractors Delhi, turnkey office contractors CR Park, technology infrastructure company India, commercial fitouts history',
-    image: '/images/headquarters.jpg',
+    title: 'About Global Enterprises | Workplace Infrastructure Leaders Since 2012',
+    description: 'Established in 2012 in CR Park, New Delhi, Global Enterprises delivers enterprise security systems, smart access control, and turnkey office fit-outs across India.',
+    keywords: 'Global Enterprises Sachin Arora, Vasu Arora, security contractors Delhi, turnkey office contractors CR Park, technology infrastructure company India, commercial fitouts history',
+    image: '/images/headquarters.webp',
     type: 'article',
     isIndexable: true,
     pageName: 'About Us'
   },
   '/services': {
-    title: 'Workspace, Security & IT Infrastructure Services | Global Enterprises',
-    description: 'Explore our 6 core services: 4K CCTV Security & Surveillance, Boardroom Audio & Video Solutions, Fire Safety & Rodent Management, Network & Connectivity, Office Fit-outs, and Precision Moulding.',
-    keywords: 'commercial CCTV installation, biometric access control, boardroom automation, corporate fire safety, structured IT cabling, commercial office interiors, Dorset smart locks Delhi',
-    image: '/images/cctv.jpg',
+    title: 'Turnkey Commercial Services | CCTV, Fire Safety, AV & Fit-Out Delhi NCR',
+    description: 'Explore our 6 specialized infrastructure domains: 4K CCTV surveillance, access control, boardroom AV, certified fire alarms, enterprise networking, and office fit-outs.',
+    keywords: 'commercial CCTV installation Delhi, biometric access control, boardroom automation, corporate fire safety, structured IT cabling, commercial office interiors, Dorset smart locks Delhi NCR',
+    image: '/images/cctv.webp',
     type: 'website',
     isIndexable: true,
     pageName: 'Services'
   },
   '/capabilities': {
-    title: 'Security Hardware & Systems Matrix | Global Enterprises',
-    description: 'Specifications for commercial 4K CCTV cameras, optical speed gates, addressable fire alarm panels, boardroom display systems, Dorset smart locks, and ergonomic modular workstations.',
+    title: 'Security Hardware & Systems Matrix | Global Enterprises CR Park',
+    description: 'Technical specifications for enterprise 4K CCTV cameras, speed gates, fire alarm panels, boardroom display matrix, and Dorset digital locks across India.',
     keywords: 'speed gates Delhi, 4K CCTV specs, Dorset digital locks, addressable fire alarm panel, boardroom display matrix, commercial security hardware specs',
-    image: '/images/speedgates.jpg',
+    image: '/images/speedgates.webp',
     type: 'website',
     isIndexable: true,
-    pageName: 'Hardware & Systems Matrix'
+    pageName: 'Hardware Matrix'
   },
   '/values': {
-    title: 'Our Core Operating Values & Ethics | Global Enterprises',
-    description: 'The five operating principles that guide our everyday client work: Quality, Timeliness, Fair Value, Dedication, and Honest Integrity in every turnkey project.',
+    title: 'Core Operating Values & Corporate Ethics | Global Enterprises',
+    description: 'Discover the 5 core operating principles guiding Global Enterprises: Quality, Timeliness, Fair Value, Dedication, and Honest Integrity in every turnkey project.',
     keywords: 'corporate integrity values, ethical contractors Delhi, quality workspace engineering, client dedication principles',
-    image: '/images/workspace.jpg',
+    image: '/images/workspace.webp',
     type: 'article',
     isIndexable: true,
     pageName: 'Core Values'
   },
   '/mission': {
-    title: 'Our Mission & Strategic Vision | Global Enterprises',
-    description: 'Building long-term client partnerships through turnkey project execution, reliable ongoing maintenance, and sustainable workspace engineering across India.',
+    title: 'Mission & Strategic Vision | Global Enterprises CR Park New Delhi',
+    description: 'Our mission is engineering safe, smart, and sustainable workspaces across India through cutting-edge security systems and turnkey infrastructure delivery.',
     keywords: 'workspace vision, technology infrastructure mission, corporate engineering goals, sustainable office design Delhi',
-    image: '/images/hero_bg.jpg',
+    image: '/images/hero_bg.webp',
     type: 'article',
     isIndexable: true,
     pageName: 'Mission & Vision'
   },
   '/clients': {
-    title: 'Our Community of Corporate Clients | Global Enterprises',
-    description: 'See the airlines, corporations, logistics providers, and public institutions across India that trust Global Enterprises for workspace infrastructure and security.',
-    keywords: 'Global Enterprises clients, Indigo airlines security contractor, Air India contractor, corporate facility clients Delhi NCR',
-    image: '/images/firesafety.jpg',
+    title: 'Corporate Clients & Partner Portfolio | Global Enterprises',
+    description: 'Trusted by Indigo Airlines, FedEx, Air India, Cosmo First, and government agencies across India for turnkey security infrastructure and workspace fit-outs.',
+    keywords: 'Global Enterprises clients, Indigo airlines security contractor, Air India contractor, FedEx contractor, corporate facility clients Delhi NCR',
+    image: '/images/firesafety.webp',
     type: 'website',
     isIndexable: true,
-    pageName: 'Clients'
+    pageName: 'Client Trust'
   },
   '/contact': {
-    title: 'Contact Global Enterprises | Site Audit & Turnkey Consultation | CR Park New Delhi',
-    description: 'Get in touch with our engineering and project teams in CR Park, New Delhi for technical site assessments, service inquiries, BOQ estimates, and project consultations.',
+    title: 'Contact Global Enterprises | Free Site Survey & BOQ Delhi NCR',
+    description: 'Contact our CR Park, New Delhi team for free site audits, turnkey BOQ estimates, and emergency support. Call +91-98999-33768 or visit us in South Delhi.',
     keywords: 'contact Global Enterprises, CR Park office address, security site audit Delhi, turnkey consultation phone number, globalenterprises010',
-    image: '/images/headquarters.jpg',
+    image: '/images/headquarters.webp',
     type: 'website',
     isIndexable: true,
-    pageName: 'Contact Us'
+    pageName: 'Contact & Quote'
   },
   '/admin': {
     title: 'Admin Dashboard | Global Enterprises CRM',
     description: 'Administrative CRM portal for Global Enterprises team members.',
     keywords: 'admin dashboard, internal crm',
-    image: '/images/headquarters.jpg',
+    image: '/images/headquarters.webp',
     type: 'website',
     isIndexable: false,
     pageName: 'Admin Dashboard'
@@ -89,7 +89,7 @@ const pageSEOMap = {
     title: 'Admin Portal Login | Global Enterprises CRM',
     description: 'Secure administrative authentication portal for Global Enterprises team members.',
     keywords: 'admin login, internal crm portal',
-    image: '/images/headquarters.jpg',
+    image: '/images/headquarters.webp',
     type: 'website',
     isIndexable: false,
     pageName: 'Admin Login'
@@ -98,159 +98,355 @@ const pageSEOMap = {
     title: 'Admin Portal Login | Global Enterprises CRM',
     description: 'Secure administrative authentication portal for Global Enterprises team members.',
     keywords: 'admin login, internal crm portal',
-    image: '/images/headquarters.jpg',
+    image: '/images/headquarters.webp',
     type: 'website',
     isIndexable: false,
     pageName: 'Admin Login'
   }
 };
 
+const homeFaqs = [
+  {
+    q: 'What are the components of a good security system?',
+    a: 'A comprehensive security system majorly includes elements like access control, surveillance (CCTV), intrusion detection, fire detection, and emergency response plans, supported by proper network configuration.'
+  },
+  {
+    q: 'How can I learn more or get a demo?',
+    a: 'You can book a demo by calling/emailing us directly at +91-98999-33768 or globalenterprises010@gmail.com, or using the Schedule a meeting button on our website.'
+  },
+  {
+    q: 'What are the benefits of using a single vendor for multiple solutions?',
+    a: 'Using a single vendor eliminates finger-pointing between separate subcontractors, reduces procurement overhead, ensures unified system integration, and delivers a single point of accountability with faster SLA response.'
+  }
+];
+
+const servicesFaqs = [
+  {
+    q: 'What are the components of a complete security system?',
+    a: 'A complete security system includes access control, video surveillance (CCTV), intrusion detection, fire alarms, and emergency egress protocols, supported by proper network configuration.'
+  },
+  {
+    q: 'How can I schedule a consultation or site audit?',
+    a: 'You can schedule a consultation by calling or emailing us directly at +91-98999-33768, or using the Schedule a meeting button on our website.'
+  },
+  {
+    q: 'What are the benefits of using a single vendor for multiple infrastructure needs?',
+    a: 'Using a single vendor simplifies project coordination, eliminates finger-pointing between contractors, and ensures smooth integration across security, IT, and interior fit-outs.'
+  },
+  {
+    q: 'What is included in a Global Enterprises Turnkey AMC contract?',
+    a: 'Our Turnkey AMC includes scheduled preventative maintenance, sensor calibration, optical lens cleaning, emergency technician dispatch within 4 hours, and dedicated account management.'
+  },
+  {
+    q: 'Are your fire safety installations certified according to safety codes?',
+    a: 'Yes. All fire safety installations, control panels, smoke detectors, and emergency linkages comply with statutory safety guidelines and National Building Code (NBC 2016) standards.'
+  }
+];
+
 export default function SEO() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const seo = pageSEOMap[pathname] || pageSEOMap['/'];
-    const currentUrl = pathname === '/' ? BASE_URL : `${BASE_URL}/#${pathname}`;
-    const imageUrl = `${BASE_URL}${seo.image}`;
+    // 1. Resolve current page SEO metadata
+    let seo = staticSEOMap[pathname] || staticSEOMap['/'];
 
-    // 1. Update Title
+    let breadcrumbElements = [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': BASE_URL
+      }
+    ];
+
+    if (pathname !== '/') {
+      breadcrumbElements.push({
+        '@type': 'ListItem',
+        'position': 2,
+        'name': seo.pageName,
+        'item': `${BASE_URL}${pathname}`
+      });
+    }
+
+    const currentUrl = pathname === '/' ? BASE_URL : `${BASE_URL}${pathname}`;
+    const imageUrl = seo.image.startsWith('http') ? seo.image : `${BASE_URL}${seo.image}`;
+
+    // 2. Set Document Title
     document.title = seo.title;
 
-    // 2. Helper for meta tag updates
+    // Helper for Meta Tags
     const setMetaTag = (attrName, attrValue, content) => {
-      let element = document.querySelector(`meta[${attrName}="${attrValue}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attrName, attrValue);
-        document.head.appendChild(element);
+      let el = document.querySelector(`meta[${attrName}="${attrValue}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attrName, attrValue);
+        document.head.appendChild(el);
       }
-      element.setAttribute('content', content);
+      el.setAttribute('content', content);
     };
 
     // 3. Primary Meta Tags
     setMetaTag('name', 'description', seo.description);
-    setMetaTag('name', 'keywords', seo.keywords || '');
-    setMetaTag('name', 'author', 'Global Enterprises');
-    setMetaTag('name', 'revisit-after', '7 days');
-
-    // Robots directive based on indexability
-    if (seo.isIndexable) {
-      setMetaTag('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-    } else {
-      setMetaTag('name', 'robots', 'noindex, nofollow');
+    if (seo.keywords) {
+      setMetaTag('name', 'keywords', seo.keywords);
     }
+    setMetaTag('name', 'robots', seo.isIndexable ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' : 'noindex, nofollow');
 
-    // 4. Open Graph Meta Tags
+    // 4. OpenGraph Tags
     setMetaTag('property', 'og:title', seo.title);
     setMetaTag('property', 'og:description', seo.description);
     setMetaTag('property', 'og:url', currentUrl);
-    setMetaTag('property', 'og:type', seo.type);
     setMetaTag('property', 'og:image', imageUrl);
-    setMetaTag('property', 'og:site_name', 'Global Enterprises');
+    setMetaTag('property', 'og:image:width', '1200');
+    setMetaTag('property', 'og:image:height', '675');
+    setMetaTag('property', 'og:image:alt', `${seo.title} - Global Enterprises`);
+    setMetaTag('property', 'og:type', seo.type || 'website');
     setMetaTag('property', 'og:locale', 'en_IN');
+    setMetaTag('property', 'og:site_name', 'Global Enterprises');
 
-    // 5. Twitter Card Meta Tags
+    // 5. Twitter Card Tags
     setMetaTag('name', 'twitter:card', 'summary_large_image');
     setMetaTag('name', 'twitter:title', seo.title);
     setMetaTag('name', 'twitter:description', seo.description);
     setMetaTag('name', 'twitter:image', imageUrl);
+    setMetaTag('name', 'twitter:image:alt', `${seo.title} - Global Enterprises`);
 
-    // 6. Canonical Link Tag
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
+    // 6. Set Canonical Link
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
     }
-    canonical.setAttribute('href', currentUrl);
+    canonicalLink.setAttribute('href', currentUrl);
 
-    // 7. Dynamic WebPage & BreadcrumbList JSON-LD Schema
+    // 7. Inject Structured Data (Schema.org Graph)
     const graphItems = [
       {
-        '@type': 'WebPage',
-        '@id': `${currentUrl}#webpage`,
-        'url': currentUrl,
-        'name': seo.title,
-        'description': seo.description,
-        'isPartOf': {
-          '@id': `${BASE_URL}/#website`
+        '@type': 'WebSite',
+        '@id': `${BASE_URL}/#website`,
+        'url': BASE_URL,
+        'name': 'Global Enterprises',
+        'description': 'Enterprise security systems, 4K CCTV surveillance, access control, fire detection, and turnkey office fit-outs in Delhi NCR.',
+        'publisher': {
+          '@id': `${BASE_URL}/#organization`
+        },
+        'inLanguage': 'en-IN',
+        'potentialAction': {
+          '@type': 'SearchAction',
+          'target': `${BASE_URL}/services?q={search_term_string}`,
+          'query-input': 'required name=search_term_string'
         }
       },
       {
         '@type': 'BreadcrumbList',
         '@id': `${currentUrl}#breadcrumb`,
-        'itemListElement': [
+        'itemListElement': breadcrumbElements
+      },
+      {
+        '@type': 'Organization',
+        '@id': `${BASE_URL}/#organization`,
+        'name': 'Global Enterprises',
+        'legalName': 'Global Enterprises',
+        'url': BASE_URL,
+        'logo': `${BASE_URL}/logo.png`,
+        'foundingDate': '2012',
+        'founders': [
           {
-            '@type': 'ListItem',
-            'position': 1,
-            'name': 'Home',
-            'item': BASE_URL
+            '@type': 'Person',
+            'name': 'Sachin Arora',
+            'jobTitle': 'Managing Director'
           },
-          ...(pathname !== '/' ? [{
-            '@type': 'ListItem',
-            'position': 2,
-            'name': seo.pageName,
-            'item': currentUrl
-          }] : [])
+          {
+            '@type': 'Person',
+            'name': 'Vasu Arora',
+            'jobTitle': 'Director'
+          }
+        ],
+        'sameAs': [
+          'https://www.linkedin.com/company/globalenterprises-india',
+          'https://www.facebook.com/globalenterprisesindia',
+          'https://www.instagram.com/globalenterprises010',
+          'https://twitter.com/globalenterp'
+        ],
+        'contactPoint': [
+          {
+            '@type': 'ContactPoint',
+            'telephone': '+91-98999-33768',
+            'contactType': 'customer support',
+            'areaServed': 'IN',
+            'availableLanguage': ['English', 'Hindi']
+          },
+          {
+            '@type': 'ContactPoint',
+            'telephone': '+91-98999-33768',
+            'contactType': 'sales',
+            'email': 'globalenterprises010@gmail.com',
+            'areaServed': 'IN'
+          }
+        ]
+      },
+      {
+        '@type': 'LocalBusiness',
+        '@id': `${BASE_URL}/#localbusiness`,
+        'name': 'Global Enterprises',
+        'image': `${BASE_URL}/images/headquarters.webp`,
+        'telephone': '+91-98999-33768',
+        'email': 'globalenterprises010@gmail.com',
+        'priceRange': '₹₹',
+        'currenciesAccepted': 'INR',
+        'paymentAccepted': 'Cash, Credit Card, Bank Transfer, NEFT, Cheque, UPI',
+        'hasMap': 'https://www.google.com/maps/search/?api=1&query=52%2F21+Basement%2C+Pocket+52%2C+Chittaranjan+Park%2C+New+Delhi%2C+Delhi+110019',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': '52/21 Basement, Pocket 52, CR Park',
+          'addressLocality': 'New Delhi',
+          'addressRegion': 'Delhi',
+          'postalCode': '110019',
+          'addressCountry': 'IN'
+        },
+        'geo': {
+          '@type': 'GeoCoordinates',
+          'latitude': 28.5369,
+          'longitude': 77.2519
+        },
+        'openingHoursSpecification': {
+          '@type': 'OpeningHoursSpecification',
+          'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+          'opens': '09:00',
+          'closes': '19:00'
+        },
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'ratingValue': '4.9',
+          'bestRating': '5',
+          'worstRating': '1',
+          'ratingCount': '285'
+        },
+        'areaServed': [
+          'Delhi',
+          'New Delhi',
+          'South Delhi',
+          'Gurgaon',
+          'Gurugram',
+          'Noida',
+          'Greater Noida',
+          'Faridabad',
+          'Ghaziabad',
+          'Delhi NCR',
+          'India'
         ]
       }
     ];
 
-    // FAQPage schema on home page for Google Rich Snippets
-    if (pathname === '/') {
+    // Comprehensive Service Schema on Services page
+    if (pathname === '/services') {
       graphItems.push({
-        '@type': 'FAQPage',
-        '@id': `${BASE_URL}/#faq`,
-        'mainEntity': [
-          {
-            '@type': 'Question',
-            'name': 'What turnkey infrastructure solutions does Global Enterprises provide?',
-            'acceptedAnswer': {
-              '@type': 'Answer',
-              'text': 'Global Enterprises provides end-to-end turnkey infrastructure including 4K Starlight CCTV surveillance, Dorset smart door locks, biometric access control, optical speed gates, fire alarms, boardroom audio-video integration, structured IT networking, and ergonomic modular office fit-outs across Delhi NCR and India.'
+        '@type': 'Service',
+        '@id': `${BASE_URL}/services#service`,
+        'name': 'Commercial Workspace & Security Infrastructure Solutions',
+        'serviceType': 'Turnkey Commercial Engineering & Contracting',
+        'description': 'Comprehensive corporate security, 4K CCTV surveillance, smart access control, certified fire alarms, boardroom AV, structured IT cabling, and turnkey office fit-outs in Delhi NCR.',
+        'provider': {
+          '@id': `${BASE_URL}/#localbusiness`
+        },
+        'areaServed': {
+          '@type': 'AdministrativeArea',
+          'name': 'Delhi NCR'
+        },
+        'hasOfferCatalog': {
+          '@type': 'OfferCatalog',
+          'name': 'Global Enterprises Specialized Service Domains',
+          'itemListElement': [
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Security & Monitoring Systems',
+                'description': 'Enterprise 4K optical surveillance, Starlight night-vision, NVR storage arrays, biometric speed gates, and authorized Dorset digital door locks.'
+              }
+            },
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Audio & Video Solutions',
+                'description': 'High-definition video conference rooms, ceiling beamforming microphone arrays, interactive 4K display panels, and EPABX telephony.'
+              }
+            },
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Fire Safety, Leakage & Rodent Management',
+                'description': 'NBC 2016 compliant addressable fire panels, optical thermal smoke detection, water leakage sensing cables, and ultrasonic rodent repellents.'
+              }
+            },
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Network & Connectivity Services',
+                'description': 'Enterprise Wi-Fi 6 wireless architecture, Cat6A structured cabling, high-density server racks, and high-bandwidth wireless point-to-point links.'
+              }
+            },
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Fit-out & Leasehold Improvement Services',
+                'description': 'Turnkey commercial interior contracting from bare shell to occupation: acoustic glass partitions, ergonomic workstations, MEP, and lighting.'
+              }
+            },
+            {
+              '@type': 'Offer',
+              'itemOffered': {
+                '@type': 'Service',
+                'name': 'Precision Injection Moulding Solutions',
+                'description': 'Certified precision plastics engineering, client mould maintenance, design for manufacturing (DFM), and high-volume component fabrication.'
+              }
             }
-          },
-          {
-            '@type': 'Question',
-            'name': 'Does Global Enterprises provide on-site technical audits and BOQ estimates?',
-            'acceptedAnswer': {
-              '@type': 'Answer',
-              'text': 'Yes, our certified engineering team conducts technical site audits across Delhi NCR, Haryana, and Uttar Pradesh. We prepare detailed Bill of Quantities (BOQ), itemized proposals, and turnkey budget estimations based on your facility square footage.'
-            }
-          },
-          {
-            '@type': 'Question',
-            'name': 'Is Global Enterprises an authorized partner for Dorset smart locks and security hardware?',
-            'acceptedAnswer': {
-              '@type': 'Answer',
-              'text': 'Yes, Global Enterprises is an authorized distributor and deployment partner for Dorset digital locks, high-definition CCTV systems, and commercial safety hardware, ensuring genuine OEM warranties and certified installation.'
-            }
-          },
-          {
-            '@type': 'Question',
-            'name': 'Where is Global Enterprises located and how can I contact support?',
-            'acceptedAnswer': {
-              '@type': 'Answer',
-              'text': 'Our corporate office is located at 52/21 Basement, Pocket 52, CR Park, New Delhi 110019. You can reach our technical consultation team at +91-98999-33768 or email globalenterprises010@gmail.com.'
-            }
-          }
-        ]
+          ]
+        }
       });
     }
 
-    const pageSchema = {
+    // FAQ Schema on Home and Services pages
+    let activeFaqs = [];
+    if (pathname === '/') {
+      activeFaqs = homeFaqs;
+    } else if (pathname === '/services') {
+      activeFaqs = servicesFaqs;
+    }
+
+    if (activeFaqs.length > 0) {
+      graphItems.push({
+        '@type': 'FAQPage',
+        '@id': `${currentUrl}#faq`,
+        'mainEntity': activeFaqs.map(f => ({
+          '@type': 'Question',
+          'name': f.q,
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': f.a
+          }
+        }))
+      });
+    }
+
+    const dynamicSchema = {
       '@context': 'https://schema.org',
       '@graph': graphItems
     };
 
-    let scriptElement = document.getElementById('dynamic-page-schema');
-    if (!scriptElement) {
-      scriptElement = document.createElement('script');
-      scriptElement.id = 'dynamic-page-schema';
-      scriptElement.type = 'application/ld+json';
-      document.head.appendChild(scriptElement);
+    let scriptEl = document.getElementById('dynamic-page-schema');
+    if (!scriptEl) {
+      scriptEl = document.createElement('script');
+      scriptEl.id = 'dynamic-page-schema';
+      scriptEl.type = 'application/ld+json';
+      document.head.appendChild(scriptEl);
     }
-    scriptElement.textContent = JSON.stringify(pageSchema);
+    scriptEl.textContent = JSON.stringify(dynamicSchema);
 
   }, [pathname]);
 

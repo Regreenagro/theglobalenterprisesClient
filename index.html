@@ -9,17 +9,18 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- Resource Preconnects for Peak Web Vitals & Loading Speed -->
+    <!-- Resource Preconnects & High-Priority Asset Preload for Peak Core Web Vitals (LCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
+    <link rel="preload" as="image" href="/images/hero_bg.webp" type="image/webp" fetchpriority="high" />
     
     <!-- Primary SEO Meta Tags -->
-    <title>Global Enterprises | Integrated Workspace &amp; Security Solutions | Delhi NCR</title>
-    <meta name="title" content="Global Enterprises | Integrated Workspace &amp; Security Solutions | Delhi NCR" />
-    <meta name="description" content="Global Enterprises is an ISO certified single-window partner providing 4K CCTV surveillance, Dorset smart door locks, access control, boardroom AV, fire safety, and turnkey office fit-outs across Delhi NCR and India." />
-    <meta name="keywords" content="CCTV surveillance Delhi NCR, office fit-outs India, Dorset smart locks, access control systems, biometric attendance, fire alarm systems, boardroom audio visual, IT network cabling, turnkey security contractors, Global Enterprises CR Park" />
+    <title>Global Enterprises | Commercial CCTV, Access Control &amp; Office Fit-Out Delhi NCR</title>
+    <meta name="title" content="Global Enterprises | Commercial CCTV, Access Control &amp; Office Fit-Out Delhi NCR" />
+    <meta name="description" content="Premier Delhi NCR contractor for 4K CCTV surveillance, access control, fire safety, boardroom AV &amp; turnkey office fit-outs in Delhi NCR. Get a free site audit." />
+    <meta name="keywords" content="CCTV surveillance Delhi NCR, office fit-outs Delhi, access control systems, biometric attendance, fire alarm systems NBC 2016, boardroom audio visual, turnkey security contractors, Global Enterprises CR Park" />
     <meta name="author" content="Global Enterprises" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="revisit-after" content="7 days" />
@@ -27,6 +28,21 @@
     <link rel="canonical" href="https://globalenterprises.in/" />
     <link rel="alternate" hreflang="en-IN" href="https://globalenterprises.in/" />
     <link rel="alternate" hreflang="x-default" href="https://globalenterprises.in/" />
+
+    <!-- Google Integrations: Google Search Console Verification -->
+    <meta name="google-site-verification" content="GSC_VERIFICATION_TOKEN_GLOBAL_ENTERPRISES" />
+
+    <!-- Google Integrations: Google Analytics 4 (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLOBALENTERPRISES"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GLOBALENTERPRISES', {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure'
+      });
+    </script>
 
     <!-- Geo-Targeting Meta Tags for Local SEO (CR Park, New Delhi, India) -->
     <meta name="geo.region" content="IN-DL" />
@@ -37,23 +53,23 @@
     <!-- Open Graph / Facebook / LinkedIn Meta Tags -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://globalenterprises.in/" />
-    <meta property="og:title" content="Global Enterprises | Integrated Workspace &amp; Security Solutions" />
-    <meta property="og:description" content="Global Enterprises is a single-window partner providing CCTV surveillance, access control, boardroom audio-video, fire safety systems, and office fit-outs across India." />
-    <meta property="og:image" content="https://globalenterprises.in/images/headquarters.jpg" />
+    <meta property="og:title" content="Global Enterprises | Commercial CCTV, Access Control &amp; Office Fit-Out Delhi NCR" />
+    <meta property="og:description" content="Global Enterprises is a premier engineering partner for 4K CCTV surveillance, biometric access control, boardroom AV, fire safety, and turnkey office fit-outs in Delhi NCR." />
+    <meta property="og:image" content="https://globalenterprises.in/images/headquarters.webp" />
     <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:height" content="675" />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:site_name" content="Global Enterprises" />
 
     <!-- Twitter / X Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://globalenterprises.in/" />
-    <meta name="twitter:title" content="Global Enterprises | Integrated Workspace &amp; Security Solutions" />
-    <meta name="twitter:description" content="Global Enterprises is a single-window partner providing CCTV surveillance, access control, boardroom audio-video, fire safety systems, and office fit-outs across India." />
-    <meta name="twitter:image" content="https://globalenterprises.in/images/headquarters.jpg" />
+    <meta name="twitter:title" content="Global Enterprises | Commercial CCTV, Access Control &amp; Office Fit-Out Delhi NCR" />
+    <meta name="twitter:description" content="Global Enterprises is a premier engineering partner for 4K CCTV surveillance, biometric access control, boardroom AV, fire safety, and turnkey office fit-outs in Delhi NCR." />
+    <meta name="twitter:image" content="https://globalenterprises.in/images/headquarters.webp" />
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts with font-display: swap for CLS/LCP Core Web Vitals optimization -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
     
     <!-- Tailwind CSS CDN for styling -->
@@ -95,8 +111,14 @@
           "alternateName": "Global Enterprises India",
           "url": "https://globalenterprises.in/",
           "logo": "https://globalenterprises.in/logo.png",
-          "description": "One-stop provider for 4K CCTV surveillance, body-worn cameras, Dorset smart locks, fire safety systems, executive boardroom AV, ergonomic furniture, network connectivity, and precision injection moulding.",
+          "description": "One-stop partner for 4K CCTV surveillance, body-worn cameras, Dorset smart locks, fire safety systems, executive boardroom AV, ergonomic furniture, network connectivity, and precision injection moulding.",
           "foundingDate": "2012",
+          "sameAs": [
+            "https://www.linkedin.com/company/globalenterprises-india",
+            "https://www.facebook.com/globalenterprisesindia",
+            "https://www.instagram.com/globalenterprises010",
+            "https://twitter.com/globalenterp"
+          ],
           "founders": [
             {
               "@type": "Person",
@@ -190,7 +212,7 @@
           },
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://globalenterprises.in/#/services?service={search_term_string}",
+            "target": "https://globalenterprises.in/services?service={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         },

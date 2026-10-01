@@ -112,13 +112,16 @@ export default function AboutSection({ onOpenSchedule }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-14">
           <div className="lg:col-span-6 relative flex flex-col justify-between">
             <div className="relative rounded-3xl overflow-hidden border border-white/20 h-full min-h-[500px] sm:min-h-[540px] bg-[#1a0b32] group shadow-2xl">
-              <img
-                src="/images/headquarters.jpg"
-                alt="Global Enterprises Corporate Headquarters in CR Park, New Delhi"
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
+              <picture>
+                <source srcSet="/images/headquarters.webp" type="image/webp" />
+                <img
+                  src="/images/headquarters.jpg"
+                  alt="Global Enterprises Corporate Headquarters in CR Park, New Delhi"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-[#120722] via-[#120722]/30 to-transparent"></div>
 
               <div className="absolute top-4 left-4 p-3 rounded-2xl bg-[#140828]/95 backdrop-blur-xl border border-amber-400/40 shadow-2xl flex items-center gap-3">

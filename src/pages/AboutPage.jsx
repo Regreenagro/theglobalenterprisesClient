@@ -40,11 +40,16 @@ export default function AboutPage({ onOpenSchedule }) {
     <div className="pt-20">
       <div className="relative min-h-[320px] sm:min-h-[360px] flex items-center justify-center overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 z-0">
-          <img
-            src="/images/headquarters.jpg"
-            alt="Global Enterprises Headquarters"
-            className="w-full h-full object-cover object-center opacity-35 scale-105"
-          />
+          <picture>
+            <source srcSet="/images/headquarters.webp" type="image/webp" />
+            <img
+              src="/images/headquarters.jpg"
+              alt="Global Enterprises Headquarters in CR Park, New Delhi"
+              className="w-full h-full object-cover object-center opacity-35 scale-105"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-[#0d041a]/95 via-[#120722]/85 to-[#120722]"></div>
           <div className="absolute inset-0 bg-tech-grid opacity-60"></div>
         </div>
