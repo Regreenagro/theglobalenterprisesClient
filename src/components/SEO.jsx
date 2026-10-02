@@ -221,121 +221,14 @@ export default function SEO() {
     canonicalLink.setAttribute('href', currentUrl);
 
     // 7. Inject Structured Data (Schema.org Graph)
+    // Note: Core static schemas (WebSite, Corporation, LocalBusiness with single AggregateRating, OfferCatalog, and Home FAQPage)
+    // are declared canonically in index.html to guarantee instantaneous, error-free search engine indexing.
+    // Dynamic page-specific schemas (BreadcrumbList, Service on /services, and Service FAQs) are injected here.
     const graphItems = [
-      {
-        '@type': 'WebSite',
-        '@id': `${BASE_URL}/#website`,
-        'url': BASE_URL,
-        'name': 'Global Enterprises',
-        'description': 'Enterprise security systems, 4K CCTV surveillance, access control, fire detection, and turnkey office fit-outs in Delhi NCR.',
-        'publisher': {
-          '@id': `${BASE_URL}/#organization`
-        },
-        'inLanguage': 'en-IN',
-        'potentialAction': {
-          '@type': 'SearchAction',
-          'target': `${BASE_URL}/services?q={search_term_string}`,
-          'query-input': 'required name=search_term_string'
-        }
-      },
       {
         '@type': 'BreadcrumbList',
         '@id': `${currentUrl}#breadcrumb`,
         'itemListElement': breadcrumbElements
-      },
-      {
-        '@type': 'Organization',
-        '@id': `${BASE_URL}/#organization`,
-        'name': 'Global Enterprises',
-        'legalName': 'Global Enterprises',
-        'url': BASE_URL,
-        'logo': `${BASE_URL}/logo.png`,
-        'foundingDate': '2012',
-        'founders': [
-          {
-            '@type': 'Person',
-            'name': 'Sachin Arora',
-            'jobTitle': 'Managing Director'
-          },
-          {
-            '@type': 'Person',
-            'name': 'Vasu Arora',
-            'jobTitle': 'Director'
-          }
-        ],
-        'sameAs': [
-          'https://www.linkedin.com/company/globalenterprises-india',
-          'https://www.facebook.com/globalenterprisesindia',
-          'https://www.instagram.com/globalenterprises010',
-          'https://twitter.com/globalenterp'
-        ],
-        'contactPoint': [
-          {
-            '@type': 'ContactPoint',
-            'telephone': '+91-98999-33768',
-            'contactType': 'customer support',
-            'areaServed': 'IN',
-            'availableLanguage': ['English', 'Hindi']
-          },
-          {
-            '@type': 'ContactPoint',
-            'telephone': '+91-98999-33768',
-            'contactType': 'sales',
-            'email': 'globalenterprises010@gmail.com',
-            'areaServed': 'IN'
-          }
-        ]
-      },
-      {
-        '@type': 'LocalBusiness',
-        '@id': `${BASE_URL}/#localbusiness`,
-        'name': 'Global Enterprises',
-        'image': `${BASE_URL}/images/headquarters.webp`,
-        'telephone': '+91-98999-33768',
-        'email': 'globalenterprises010@gmail.com',
-        'priceRange': '₹₹',
-        'currenciesAccepted': 'INR',
-        'paymentAccepted': 'Cash, Credit Card, Bank Transfer, NEFT, Cheque, UPI',
-        'hasMap': 'https://www.google.com/maps/search/?api=1&query=52%2F21+Basement%2C+Pocket+52%2C+Chittaranjan+Park%2C+New+Delhi%2C+Delhi+110019',
-        'address': {
-          '@type': 'PostalAddress',
-          'streetAddress': '52/21 Basement, Pocket 52, CR Park',
-          'addressLocality': 'New Delhi',
-          'addressRegion': 'Delhi',
-          'postalCode': '110019',
-          'addressCountry': 'IN'
-        },
-        'geo': {
-          '@type': 'GeoCoordinates',
-          'latitude': 28.5369,
-          'longitude': 77.2519
-        },
-        'openingHoursSpecification': {
-          '@type': 'OpeningHoursSpecification',
-          'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-          'opens': '09:00',
-          'closes': '19:00'
-        },
-        'aggregateRating': {
-          '@type': 'AggregateRating',
-          'ratingValue': '4.9',
-          'bestRating': '5',
-          'worstRating': '1',
-          'ratingCount': '285'
-        },
-        'areaServed': [
-          'Delhi',
-          'New Delhi',
-          'South Delhi',
-          'Gurgaon',
-          'Gurugram',
-          'Noida',
-          'Greater Noida',
-          'Faridabad',
-          'Ghaziabad',
-          'Delhi NCR',
-          'India'
-        ]
       }
     ];
 
@@ -411,11 +304,9 @@ export default function SEO() {
       });
     }
 
-    // FAQ Schema on Home and Services pages
+    // FAQ Schema on Services page (Home FAQs are canonically defined in index.html)
     let activeFaqs = [];
-    if (pathname === '/') {
-      activeFaqs = homeFaqs;
-    } else if (pathname === '/services') {
+    if (pathname === '/services') {
       activeFaqs = servicesFaqs;
     }
 
