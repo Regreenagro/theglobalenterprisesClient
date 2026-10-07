@@ -1,4 +1,4 @@
-# Robots.txt for Global Enterprises (https://globalenterprises.in)
+# Robots.txt for Global Enterprises (https://www.theglobalenterprises.in)
 # Optimized for maximum Google visibility, indexing, and security
 
 User-agent: *
@@ -34,5 +34,5 @@ Disallow: /admin-login
 Disallow: /api/
 
 # Host & XML Sitemap Locations
-Host: https://globalenterprises.in
-Sitemap: https://globalenterprises.in/sitemap.xml
+Host: https://www.theglobalenterprises.in
+Sitemap: https://www.theglobalenterprises.in/sitemap.xml

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = 'https://globalenterprises.in';
+const BASE_URL = 'https://www.theglobalenterprises.in';
 const TODAY = new Date().toISOString().split('T')[0];
 
 const canonicalPages = [
