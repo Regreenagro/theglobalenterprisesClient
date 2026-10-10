@@ -6,6 +6,7 @@ const API_BASE = import.meta.env?.VITE_API_URL ||
 const STORAGE_KEYS = {
   INQUIRIES: 'global_inquiries_cache',
   TOKEN: 'global_admin_token',
+  REFRESH_TOKEN: 'global_admin_refresh_token',
   USER: 'global_admin_user',
 };
 
@@ -94,13 +95,52 @@ export function InquiryProvider({ children }) {
   const isLoggedIn = Boolean(adminUser && token);
 
   const logout = useCallback(() => {
+    const currentToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const currentRefreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+
+    // Revoke token on server / Redis blacklist asynchronously
+    if (currentToken) {
+      fetch(`${API_BASE}/admin/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentToken}`
+        },
+        body: JSON.stringify({ refreshToken: currentRefreshToken })
+      }).catch(() => {});
+    }
+
     setToken('');
     setAdminUser(null);
     setInquiries([]);
     setUnreadCount(0);
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER);
     localStorage.removeItem(STORAGE_KEYS.INQUIRIES);
+  }, []);
+
+  // Transparent token refresh helper
+  const tryRefreshToken = useCallback(async () => {
+    const storedRefresh = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+    if (!storedRefresh) return null;
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/refresh-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: storedRefresh })
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.token) {
+        setToken(data.token);
+        localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+        return data.token;
+      }
+    } catch {
+      // Network failure
+    }
+    return null;
   }, []);
 
   const syncInquiriesState = useCallback((data) => {
@@ -116,22 +156,33 @@ export function InquiryProvider({ children }) {
 
   const fetchInquiries = useCallback(async () => {
     // Only fetch customer inquiries when authorized as admin
-    if (!token) {
+    const currentToken = token || localStorage.getItem(STORAGE_KEYS.TOKEN);
+    if (!currentToken) {
       setInquiries([]);
       setUnreadCount(0);
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE}/inquiries`, {
+      let res = await fetch(`${API_BASE}/inquiries`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${currentToken}`
         }
       });
 
+      // If token expired, attempt automatic silent refresh
       if (res.status === 401 || res.status === 403) {
-        logout();
-        return;
+        const refreshed = await tryRefreshToken();
+        if (refreshed) {
+          res = await fetch(`${API_BASE}/inquiries`, {
+            headers: {
+              'Authorization': `Bearer ${refreshed}`
+            }
+          });
+        } else {
+          logout();
+          return;
+        }
       }
 
       if (res.ok) {
@@ -152,7 +203,7 @@ export function InquiryProvider({ children }) {
         // Fallback catch
       }
     }
-  }, [token, logout, syncInquiriesState]);
+  }, [token, logout, tryRefreshToken, syncInquiriesState]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -270,6 +321,9 @@ export function InquiryProvider({ children }) {
         setToken(json.token);
         setAdminUser(json.admin);
         localStorage.setItem(STORAGE_KEYS.TOKEN, json.token);
+        if (json.refreshToken) {
+          localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, json.refreshToken);
+        }
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(json.admin));
 
         setIsLoading(false);
