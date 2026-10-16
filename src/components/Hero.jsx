@@ -141,7 +141,7 @@ export default function Hero({ onOpenSchedule }) {
               </button>
 
               <a
-                href="#services"
+                href="services"
                 className="btn-glass px-4.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 hover:border-amber-400 w-full sm:w-auto"
               >
                 <span>Explore our services</span>
@@ -222,8 +222,8 @@ export default function Hero({ onOpenSchedule }) {
                   });
                 }}
                 className={`relative px-3 sm:px-3.5 py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-[11px] font-bold tracking-wider uppercase transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${activeTab === idx
-                    ? 'text-[#120722]'
-                    : 'bg-white/5 text-[#c4b5fd] hover:text-white hover:bg-white/10'
+                  ? 'text-[#120722]'
+                  : 'bg-white/5 text-[#c4b5fd] hover:text-white hover:bg-white/10'
                   }`}
               >
                 {activeTab === idx && (
@@ -288,9 +288,9 @@ export default function Hero({ onOpenSchedule }) {
 
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => onOpenSchedule({ 
-                    type: 'meeting', 
-                    service: current.title, 
+                  onClick={() => onOpenSchedule({
+                    type: 'meeting',
+                    service: current.title,
                     title: `Schedule Consultation: ${current.category}`,
                     subtitle: `30-minute technical session on ${current.title}`
                   })}
