@@ -135,7 +135,8 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
   const outerNodes = nodes.filter(n => n.orbit === 'outer');
   const innerNodes = nodes.filter(n => n.orbit === 'inner');
 
-  // Calculates a safe, collision-free tooltip coordinate inside the 540x540 container space
+  // Dynamic Best-Fit Free Space Finder: Searches candidate placements around the hovered node
+  // and selects the location with maximum free space (zero overlap with logo, other nodes, or boundaries).
   const handleNodeHover = (node, event) => {
     setIsPaused(true);
     setHoveredNode(node);
@@ -147,125 +148,152 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
     const containerRect = containerRef.current.getBoundingClientRect();
     const buttonRect = event.currentTarget.getBoundingClientRect();
 
-    // Scale ratio for responsiveness (container base size: 540px)
+    // Scale ratio for container responsiveness (base size: 540x540)
     const scale = containerRect.width > 0 ? containerRect.width / 540 : 1;
 
-    // Button position in 540x540 virtual space
-    const nodeLeft = (buttonRect.left - containerRect.left) / scale;
-    const nodeTop = (buttonRect.top - containerRect.top) / scale;
-    const nodeWidth = buttonRect.width / scale;
-    const nodeHeight = buttonRect.height / scale;
-
-    const nx = nodeLeft + nodeWidth / 2;
-    const ny = nodeTop + nodeHeight / 2;
-
-    const tw = 186; // tooltip card width
-    const th = 56;  // tooltip card height
     const W = 540;
     const H = 540;
-    const PAD = 10;
+    const PAD = 14;
+
+    // Compact, highly legible tooltip dimensions
+    const tw = 168;
+    const th = 48;
 
     const minLeft = PAD;
     const maxLeft = W - tw - PAD;
     const minTop = PAD;
     const maxTop = H - th - PAD;
 
-    // Center logo protected zone (270, 270)
-    const logoBox = {
-      left: 195,
-      right: 345,
-      top: 195,
+    // Hovered button in virtual 540x540 coordinates
+    const bLeft = (buttonRect.left - containerRect.left) / scale;
+    const bTop = (buttonRect.top - containerRect.top) / scale;
+    const bWidth = buttonRect.width / scale;
+    const bHeight = buttonRect.height / scale;
+
+    const bx = bLeft + bWidth / 2;
+    const by = bTop + bHeight / 2;
+
+    // Center logo hub + "INTEGRATED WORKSPACE" protected box
+    const logoObstacle = {
+      left: 192,
+      top: 185,
+      right: 348,
       bottom: 358
     };
 
-    const collidesWithLogo = (l, t) => {
-      return !(l + tw < logoBox.left || l > logoBox.right || t + th < logoBox.top || t > logoBox.bottom);
+    // Real-time obstacles: gather bounding boxes of all other 7 nodes
+    const otherNodes = [];
+    const buttonElements = containerRef.current.querySelectorAll('button[data-orbit-node]');
+    buttonElements.forEach((btn) => {
+      if (btn !== event.currentTarget) {
+        const r = btn.getBoundingClientRect();
+        otherNodes.push({
+          left: (r.left - containerRect.left) / scale - 4,
+          top: (r.top - containerRect.top) / scale - 4,
+          right: (r.right - containerRect.left) / scale + 4,
+          bottom: (r.bottom - containerRect.top) / scale + 4
+        });
+      }
+    });
+
+    // Helper: calculate overlapping area between two rectangles
+    const getOverlapArea = (r1, r2) => {
+      const xOverlap = Math.max(0, Math.min(r1.right, r2.right) - Math.max(r1.left, r2.left));
+      const yOverlap = Math.max(0, Math.min(r1.bottom, r2.bottom) - Math.max(r1.top, r2.top));
+      return xOverlap * yOverlap;
     };
 
-    const dx = nx - 270;
-    const dy = ny - 270;
+    const dx = bx - 270;
+    const dy = by - 270;
+    const GAP = 8;
 
-    let left = nx - tw / 2;
-    let top = 0;
+    // 14 candidate positions around the node to find where space is free
+    const candidates = [
+      // 1. Direct Above
+      { x: bx - tw / 2, y: bTop - th - GAP },
+      // 2. Direct Below
+      { x: bx - tw / 2, y: bTop + bHeight + GAP },
+      // 3. Direct Left
+      { x: bLeft - tw - GAP, y: by - th / 2 },
+      // 4. Direct Right
+      { x: bLeft + bWidth + GAP, y: by - th / 2 },
 
-    // Placement logic based on vertical hemisphere:
-    if (dy > 30) {
-      // Lower hemisphere: NEVER place below outer bottom nodes (prevents bottom overlap)
-      const topAbove = nodeTop - th - 10;
-      const leftAbove = Math.max(minLeft, Math.min(maxLeft, nx - tw / 2));
+      // 5. Diagonal Top-Right
+      { x: bLeft + bWidth + 2, y: bTop - th - 2 },
+      // 6. Diagonal Top-Left
+      { x: bLeft - tw - 2, y: bTop - th - 2 },
+      // 7. Diagonal Bottom-Right
+      { x: bLeft + bWidth + 2, y: bTop + bHeight + 2 },
+      // 8. Diagonal Bottom-Left
+      { x: bLeft - tw - 2, y: bTop + bHeight + 2 },
 
-      if (!collidesWithLogo(leftAbove, topAbove) && topAbove >= minTop) {
-        top = topAbove;
-        left = leftAbove;
-      } else {
-        // Inner bottom node: place below if strictly inside safe container bounds
-        const topBelow = nodeTop + nodeHeight + 10;
-        if (topBelow <= maxTop) {
-          top = topBelow;
-          left = leftAbove;
-        } else {
-          top = Math.max(minTop, Math.min(maxTop, topAbove));
-          left = dx < 0
-            ? Math.max(minLeft, Math.min(logoBox.left - tw - 6, leftAbove))
-            : Math.min(maxLeft, Math.max(logoBox.right + 6, leftAbove));
-        }
+      // 9. Inward towards center (shifted 35% towards center)
+      { x: bx - tw / 2 - (dx * 0.35), y: by - th / 2 - (dy * 0.35) },
+      // 10. Outward away from center
+      { x: bx - tw / 2 + (dx * 0.3), y: by - th / 2 + (dy * 0.3) },
+
+      // 11. Left-aligned above
+      { x: bLeft, y: bTop - th - GAP },
+      // 12. Right-aligned above
+      { x: bLeft + bWidth - tw, y: bTop - th - GAP },
+      // 13. Left-aligned below
+      { x: bLeft, y: bTop + bHeight + GAP },
+      // 14. Right-aligned below
+      { x: bLeft + bWidth - tw, y: bTop + bHeight + GAP }
+    ];
+
+    let bestX = Math.max(minLeft, Math.min(maxLeft, bx - tw / 2));
+    let bestY = Math.max(minTop, Math.min(maxTop, bTop - th - GAP));
+    let lowestPenalty = Infinity;
+
+    for (const cand of candidates) {
+      // 1. Penalty for overflowing container boundaries (prevents top navbar & right-edge cutoffs)
+      let boundaryPenalty = 0;
+      if (cand.x < minLeft) boundaryPenalty += (minLeft - cand.x) * 300;
+      if (cand.x > maxLeft) boundaryPenalty += (cand.x - maxLeft) * 300;
+      if (cand.y < minTop) boundaryPenalty += (minTop - cand.y) * 400;
+      if (cand.y > maxTop) boundaryPenalty += (cand.y - maxTop) * 400;
+
+      const clampedX = Math.max(minLeft, Math.min(maxLeft, cand.x));
+      const clampedY = Math.max(minTop, Math.min(maxTop, cand.y));
+
+      const candRect = {
+        left: clampedX,
+        top: clampedY,
+        right: clampedX + tw,
+        bottom: clampedY + th
+      };
+
+      // 2. Strict Penalty for overlapping Center Logo or "INTEGRATED WORKSPACE"
+      const logoOverlap = getOverlapArea(candRect, logoObstacle);
+      const logoPenalty = logoOverlap * 60;
+
+      // 3. Penalty for overlapping any of the other 7 orbital nodes
+      let nodesOverlap = 0;
+      for (const nodeObs of otherNodes) {
+        nodesOverlap += getOverlapArea(candRect, nodeObs);
       }
-    } else if (dy < -30) {
-      // Upper hemisphere: NEVER place above outer top nodes (prevents top boundary overflow)
-      const topBelow = nodeTop + nodeHeight + 10;
-      const leftBelow = Math.max(minLeft, Math.min(maxLeft, nx - tw / 2));
+      const nodesPenalty = nodesOverlap * 35;
 
-      if (!collidesWithLogo(leftBelow, topBelow) && topBelow <= maxTop) {
-        top = topBelow;
-        left = leftBelow;
-      } else {
-        // Inner top node: place above if strictly inside safe container bounds
-        const topAbove = nodeTop - th - 10;
-        if (topAbove >= minTop) {
-          top = topAbove;
-          left = leftBelow;
-        } else {
-          top = Math.max(minTop, Math.min(maxTop, topBelow));
-          left = dx < 0
-            ? Math.max(minLeft, Math.min(logoBox.left - tw - 6, leftBelow))
-            : Math.min(maxLeft, Math.max(logoBox.right + 6, leftBelow));
-        }
+      // 4. Proximity penalty: keep reasonably close to hovered node
+      const candCenterX = clampedX + tw / 2;
+      const candCenterY = clampedY + th / 2;
+      const distFromNode = Math.hypot(candCenterX - bx, candCenterY - by);
+      const distPenalty = distFromNode * 0.35;
+
+      const totalPenalty = boundaryPenalty + logoPenalty + nodesPenalty + distPenalty;
+
+      if (totalPenalty < lowestPenalty) {
+        lowestPenalty = totalPenalty;
+        bestX = clampedX;
+        bestY = clampedY;
       }
-    } else {
-      // Equator region: position vertically clear and offset horizontally
-      const topEquator = dy <= 0 ? nodeTop - th - 8 : nodeTop + nodeHeight + 8;
-      top = Math.max(minTop, Math.min(maxTop, topEquator));
-
-      if (dx < 0) {
-        left = Math.max(minLeft, Math.min(logoBox.left - tw - 6, nx - tw / 2));
-      } else {
-        left = Math.min(maxLeft, Math.max(logoBox.right + 6, nx - tw / 2));
-      }
-    }
-
-    // Safety clamps
-    left = Math.max(minLeft, Math.min(maxLeft, left));
-    top = Math.max(minTop, Math.min(maxTop, top));
-
-    // Logo collision prevention fallback
-    if (collidesWithLogo(left, top)) {
-      if (dy > 30) {
-        top = Math.min(maxTop, Math.max(top, logoBox.bottom + 8));
-      } else if (dy < -30) {
-        top = Math.max(minTop, Math.min(top, logoBox.top - th - 8));
-      } else if (dx < 0) {
-        left = Math.max(minLeft, Math.min(left, logoBox.left - tw - 8));
-      } else {
-        left = Math.min(maxLeft, Math.max(left, logoBox.right + 8));
-      }
-      left = Math.max(minLeft, Math.min(maxLeft, left));
-      top = Math.max(minTop, Math.min(maxTop, top));
     }
 
     setHoverState({
       node,
-      tooltipLeft: Math.round(left),
-      tooltipTop: Math.round(top)
+      tooltipLeft: Math.round(bestX),
+      tooltipTop: Math.round(bestY)
     });
   };
 
@@ -301,6 +329,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       >
         <div style={counterSpinStyle} className="relative group">
           <button
+            data-orbit-node={node.id}
             onMouseEnter={(e) => handleNodeHover(node, e)}
             onMouseLeave={handleNodeLeave}
             onClick={() => {
@@ -424,22 +453,22 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
             style={{
               transform: `translate3d(${hoverState.tooltipLeft}px, ${hoverState.tooltipTop}px, 0)`,
             }}
-            className="absolute top-0 left-0 w-[186px] p-2 rounded-xl bg-[#1a0933]/98 border border-amber-400/80 shadow-[0_12px_32px_rgba(0,0,0,0.95)] backdrop-blur-2xl pointer-events-none z-[130] animate-fadeIn text-left flex items-center gap-2.5 transition-all duration-150"
+            className="absolute top-0 left-0 w-[168px] h-[48px] p-1.5 rounded-xl bg-[#1a0933]/98 border border-amber-400/80 shadow-[0_12px_32px_rgba(0,0,0,0.95)] backdrop-blur-2xl pointer-events-none z-[150] animate-fadeIn text-left flex items-center gap-2 transition-all duration-150"
           >
             <img
               src={hoverState.node.image}
               alt={hoverState.node.title}
-              className="w-10 h-10 rounded-lg object-cover border border-white/20 shrink-0"
+              className="w-9 h-9 rounded-lg object-cover border border-white/20 shrink-0"
               loading="lazy"
             />
             <div className="min-w-0 flex-1">
-              <div className="text-[8.5px] font-extrabold uppercase tracking-wider text-amber-400 truncate">
+              <div className="text-[8px] font-extrabold uppercase tracking-wider text-amber-400 truncate leading-none mb-0.5">
                 {hoverState.node.category}
               </div>
-              <div className="text-[11.5px] font-bold text-white leading-tight truncate">
+              <div className="text-[11px] font-bold text-white leading-snug truncate">
                 {hoverState.node.title}
               </div>
-              <div className="text-[9.5px] text-[#c4b5fd] mt-0.5 leading-tight truncate flex items-center gap-1">
+              <div className="text-[9px] text-[#c4b5fd] leading-none mt-0.5 truncate flex items-center gap-1">
                 <span>Click to inspect</span>
                 <span className="text-amber-400">&bull;</span>
               </div>
