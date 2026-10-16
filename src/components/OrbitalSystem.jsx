@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Video, 
   ShieldCheck, 
@@ -14,11 +14,13 @@ import {
  * GPU-Accelerated Zero-Lag Orbital System
  * - Offloads all 360-degree orbital motion to GPU Compositor thread via pure CSS transforms.
  * - 0% React Main-Thread CPU Overhead: Eliminates continuous 60fps setState reconciliation.
- * - Instant hover-pause and butter-smooth 120fps transitions.
+ * - Dynamic Collision-Free Tooltip: Accurately placed in static container space to prevent overlap with bottom cards, center logo, and top boundaries.
  */
 export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [hoverState, setHoverState] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  const containerRef = useRef(null);
 
   // Orbit nodes configuration
   const nodes = [
@@ -31,7 +33,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'outer',
       orbitRadius: 220,
       baseAngle: 0,
-      image: '/images/speedgates.jpg',
+      image: '/images/speedgates.webp',
       desc: 'Encrypted smart locks and multi-factor authentication.'
     },
     {
@@ -42,7 +44,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'outer',
       orbitRadius: 220,
       baseAngle: 72,
-      image: '/images/av_room.jpg',
+      image: '/images/av_room.webp',
       desc: 'Executive boardrooms & ultra-HD conference video walls.'
     },
     {
@@ -53,7 +55,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'outer',
       orbitRadius: 220,
       baseAngle: 144,
-      image: '/images/workspace.jpg',
+      image: '/images/workspace.webp',
       desc: 'Custom glass partitioning & height-adjustable workstations.'
     },
     {
@@ -64,7 +66,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'outer',
       orbitRadius: 220,
       baseAngle: 216,
-      image: '/images/cctv.jpg',
+      image: '/images/cctv.webp',
       desc: 'Physical and digital security infrastructure.'
     },
     {
@@ -75,7 +77,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'outer',
       orbitRadius: 220,
       baseAngle: 288,
-      image: '/images/cctv.jpg',
+      image: '/images/cctv.webp',
       desc: 'High-definition 4K optical surveillance & body-worn cameras.'
     },
 
@@ -88,7 +90,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'inner',
       orbitRadius: 155,
       baseAngle: 300,
-      image: '/images/speedgates.jpg',
+      image: '/images/speedgates.webp',
       desc: 'Unified ecosystem connecting security, IoT and IT nodes.'
     },
     {
@@ -99,7 +101,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'inner',
       orbitRadius: 155,
       baseAngle: 60,
-      image: '/images/speedgates.jpg',
+      image: '/images/speedgates.webp',
       desc: 'Biometric, RFID & automated turnstiles for fast entry.'
     },
     {
@@ -110,7 +112,7 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       orbit: 'inner',
       orbitRadius: 155,
       baseAngle: 180,
-      image: '/images/firesafety.jpg',
+      image: '/images/firesafety.webp',
       desc: 'Certified thermal early-warning detection & suppression.'
     }
   ];
@@ -133,20 +135,143 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
   const outerNodes = nodes.filter(n => n.orbit === 'outer');
   const innerNodes = nodes.filter(n => n.orbit === 'inner');
 
-  // Dynamic tooltip placement helper: opens inward towards the center circle
-  const getTooltipPositionClass = (x, y) => {
-    if (y < -30) {
-      if (x > 50) return "top-full mt-2.5 right-0";
-      if (x < -50) return "top-full mt-2.5 left-0";
-      return "top-full mt-2.5 left-1/2 -translate-x-1/2";
-    } else if (y > 30) {
-      if (x > 50) return "bottom-full mb-2.5 right-0";
-      if (x < -50) return "bottom-full mb-2.5 left-0";
-      return "bottom-full mb-2.5 left-1/2 -translate-x-1/2";
-    } else {
-      if (x > 0) return "right-full mr-2.5 top-1/2 -translate-y-1/2";
-      return "left-full ml-2.5 top-1/2 -translate-y-1/2";
+  // Calculates a safe, collision-free tooltip coordinate inside the 540x540 container space
+  const handleNodeHover = (node, event) => {
+    setIsPaused(true);
+    setHoveredNode(node);
+
+    if (!containerRef.current || !event?.currentTarget) {
+      return;
     }
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const buttonRect = event.currentTarget.getBoundingClientRect();
+
+    // Scale ratio for responsiveness (container base size: 540px)
+    const scale = containerRect.width > 0 ? containerRect.width / 540 : 1;
+
+    // Button position in 540x540 virtual space
+    const nodeLeft = (buttonRect.left - containerRect.left) / scale;
+    const nodeTop = (buttonRect.top - containerRect.top) / scale;
+    const nodeWidth = buttonRect.width / scale;
+    const nodeHeight = buttonRect.height / scale;
+
+    const nx = nodeLeft + nodeWidth / 2;
+    const ny = nodeTop + nodeHeight / 2;
+
+    const tw = 186; // tooltip card width
+    const th = 56;  // tooltip card height
+    const W = 540;
+    const H = 540;
+    const PAD = 10;
+
+    const minLeft = PAD;
+    const maxLeft = W - tw - PAD;
+    const minTop = PAD;
+    const maxTop = H - th - PAD;
+
+    // Center logo protected zone (270, 270)
+    const logoBox = {
+      left: 195,
+      right: 345,
+      top: 195,
+      bottom: 358
+    };
+
+    const collidesWithLogo = (l, t) => {
+      return !(l + tw < logoBox.left || l > logoBox.right || t + th < logoBox.top || t > logoBox.bottom);
+    };
+
+    const dx = nx - 270;
+    const dy = ny - 270;
+
+    let left = nx - tw / 2;
+    let top = 0;
+
+    // Placement logic based on vertical hemisphere:
+    if (dy > 30) {
+      // Lower hemisphere: NEVER place below outer bottom nodes (prevents bottom overlap)
+      const topAbove = nodeTop - th - 10;
+      const leftAbove = Math.max(minLeft, Math.min(maxLeft, nx - tw / 2));
+
+      if (!collidesWithLogo(leftAbove, topAbove) && topAbove >= minTop) {
+        top = topAbove;
+        left = leftAbove;
+      } else {
+        // Inner bottom node: place below if strictly inside safe container bounds
+        const topBelow = nodeTop + nodeHeight + 10;
+        if (topBelow <= maxTop) {
+          top = topBelow;
+          left = leftAbove;
+        } else {
+          top = Math.max(minTop, Math.min(maxTop, topAbove));
+          left = dx < 0
+            ? Math.max(minLeft, Math.min(logoBox.left - tw - 6, leftAbove))
+            : Math.min(maxLeft, Math.max(logoBox.right + 6, leftAbove));
+        }
+      }
+    } else if (dy < -30) {
+      // Upper hemisphere: NEVER place above outer top nodes (prevents top boundary overflow)
+      const topBelow = nodeTop + nodeHeight + 10;
+      const leftBelow = Math.max(minLeft, Math.min(maxLeft, nx - tw / 2));
+
+      if (!collidesWithLogo(leftBelow, topBelow) && topBelow <= maxTop) {
+        top = topBelow;
+        left = leftBelow;
+      } else {
+        // Inner top node: place above if strictly inside safe container bounds
+        const topAbove = nodeTop - th - 10;
+        if (topAbove >= minTop) {
+          top = topAbove;
+          left = leftBelow;
+        } else {
+          top = Math.max(minTop, Math.min(maxTop, topBelow));
+          left = dx < 0
+            ? Math.max(minLeft, Math.min(logoBox.left - tw - 6, leftBelow))
+            : Math.min(maxLeft, Math.max(logoBox.right + 6, leftBelow));
+        }
+      }
+    } else {
+      // Equator region: position vertically clear and offset horizontally
+      const topEquator = dy <= 0 ? nodeTop - th - 8 : nodeTop + nodeHeight + 8;
+      top = Math.max(minTop, Math.min(maxTop, topEquator));
+
+      if (dx < 0) {
+        left = Math.max(minLeft, Math.min(logoBox.left - tw - 6, nx - tw / 2));
+      } else {
+        left = Math.min(maxLeft, Math.max(logoBox.right + 6, nx - tw / 2));
+      }
+    }
+
+    // Safety clamps
+    left = Math.max(minLeft, Math.min(maxLeft, left));
+    top = Math.max(minTop, Math.min(maxTop, top));
+
+    // Logo collision prevention fallback
+    if (collidesWithLogo(left, top)) {
+      if (dy > 30) {
+        top = Math.min(maxTop, Math.max(top, logoBox.bottom + 8));
+      } else if (dy < -30) {
+        top = Math.max(minTop, Math.min(top, logoBox.top - th - 8));
+      } else if (dx < 0) {
+        left = Math.max(minLeft, Math.min(left, logoBox.left - tw - 8));
+      } else {
+        left = Math.min(maxLeft, Math.max(left, logoBox.right + 8));
+      }
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
+    }
+
+    setHoverState({
+      node,
+      tooltipLeft: Math.round(left),
+      tooltipTop: Math.round(top)
+    });
+  };
+
+  const handleNodeLeave = () => {
+    setHoveredNode(null);
+    setHoverState(null);
   };
 
   const renderNode = (node, isOuter) => {
@@ -176,13 +301,8 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
       >
         <div style={counterSpinStyle} className="relative group">
           <button
-            onMouseEnter={() => {
-              setIsPaused(true);
-              setHoveredNode(node);
-            }}
-            onMouseLeave={() => {
-              setHoveredNode(null);
-            }}
+            onMouseEnter={(e) => handleNodeHover(node, e)}
+            onMouseLeave={handleNodeLeave}
             onClick={() => {
               if (onSelectNode) onSelectNode(node.id, node);
             }}
@@ -195,30 +315,6 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
           >
             <IconComponent className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
           </button>
-
-          {isHovered && (
-            <div 
-              className={`absolute w-48 sm:w-52 p-2 sm:p-2.5 rounded-xl bg-[#1a0933]/98 border border-amber-400/80 shadow-[0_15px_35px_rgba(0,0,0,0.95)] backdrop-blur-2xl pointer-events-none z-[120] animate-fadeIn text-left flex items-center gap-2.5 ${getTooltipPositionClass(x, y)}`}
-            >
-              <img
-                src={node.image}
-                alt={node.title}
-                className="w-12 h-12 sm:w-13 sm:h-13 rounded-xl object-cover border border-white/20 shrink-0"
-                loading="lazy"
-              />
-              <div className="min-w-0">
-                <div className="text-[9px] font-extrabold uppercase tracking-wider text-amber-400 truncate">
-                  {node.category}
-                </div>
-                <div className="text-xs font-bold text-white leading-tight truncate">
-                  {node.title}
-                </div>
-                <div className="text-[10px] text-[#c4b5fd] mt-0.5 leading-tight truncate">
-                  Click to inspect
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
@@ -227,11 +323,13 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
   return (
     <div className="w-full flex items-center justify-center overflow-visible py-0 sm:py-1">
       <div 
+        ref={containerRef}
         className="relative w-full max-w-[540px] aspect-square mx-auto flex items-center justify-center select-none scale-[0.62] xs:scale-75 sm:scale-85 md:scale-95 lg:scale-100 origin-center transition-transform"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => {
           setIsPaused(false);
           setHoveredNode(null);
+          setHoverState(null);
         }}
       >
         {/* Ambient Glow Orbs */}
@@ -319,6 +417,35 @@ export default function OrbitalSystem({ activeNodeId, onSelectNode }) {
 
         <div className="absolute top-8 right-12 w-2 h-2 rounded-full bg-amber-400/80 animate-ping"></div>
         <div className="absolute bottom-10 left-10 w-2 h-2 rounded-full bg-purple-400/80 animate-pulse"></div>
+
+        {/* Dynamic Collision-Free Tooltip (Container Coordinate Space, Guaranteed Zero Overlap) */}
+        {hoverState && hoverState.node && (
+          <div 
+            style={{
+              transform: `translate3d(${hoverState.tooltipLeft}px, ${hoverState.tooltipTop}px, 0)`,
+            }}
+            className="absolute top-0 left-0 w-[186px] p-2 rounded-xl bg-[#1a0933]/98 border border-amber-400/80 shadow-[0_12px_32px_rgba(0,0,0,0.95)] backdrop-blur-2xl pointer-events-none z-[130] animate-fadeIn text-left flex items-center gap-2.5 transition-all duration-150"
+          >
+            <img
+              src={hoverState.node.image}
+              alt={hoverState.node.title}
+              className="w-10 h-10 rounded-lg object-cover border border-white/20 shrink-0"
+              loading="lazy"
+            />
+            <div className="min-w-0 flex-1">
+              <div className="text-[8.5px] font-extrabold uppercase tracking-wider text-amber-400 truncate">
+                {hoverState.node.category}
+              </div>
+              <div className="text-[11.5px] font-bold text-white leading-tight truncate">
+                {hoverState.node.title}
+              </div>
+              <div className="text-[9.5px] text-[#c4b5fd] mt-0.5 leading-tight truncate flex items-center gap-1">
+                <span>Click to inspect</span>
+                <span className="text-amber-400">&bull;</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
